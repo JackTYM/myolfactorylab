@@ -1,5 +1,6 @@
+// After any migration that adds tables, re-run db/grants.sql against Neon (see file for why).
 import { sql } from 'drizzle-orm';
-import { pgTable, uuid, text, boolean, integer, jsonb, timestamp, uniqueIndex } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, text, boolean, integer, jsonb, timestamp, uniqueIndex, index } from 'drizzle-orm/pg-core';
 import { crudPolicy, authenticatedRole, authUid } from 'drizzle-orm/neon';
 
 const ownerId = () => text('user_id').notNull().default(sql`(auth.user_id())`);
@@ -24,7 +25,10 @@ export const combos = pgTable(
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
   },
-  (table) => [crudPolicy({ role: authenticatedRole, read: authUid(table.userId), modify: authUid(table.userId) })]
+  (table) => [
+    index('combos_user_id_idx').on(table.userId),
+    crudPolicy({ role: authenticatedRole, read: authUid(table.userId), modify: authUid(table.userId) }),
+  ]
 ).enableRLS();
 
 export const notes = pgTable(
@@ -37,7 +41,10 @@ export const notes = pgTable(
     updatedOn: timestamp('updated_on', { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   },
-  (table) => [crudPolicy({ role: authenticatedRole, read: authUid(table.userId), modify: authUid(table.userId) })]
+  (table) => [
+    index('notes_user_id_idx').on(table.userId),
+    crudPolicy({ role: authenticatedRole, read: authUid(table.userId), modify: authUid(table.userId) }),
+  ]
 ).enableRLS();
 
 export const wishlist = pgTable(
