@@ -6,9 +6,14 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function init() {
     const neon = useNeon();
-    const { data } = await neon.auth.getSession();
-    user.value = data?.session?.user ?? null;
-    ready.value = true;
+    try {
+      const { data } = await neon.auth.getSession();
+      user.value = data?.session?.user ?? null;
+    } catch {
+      user.value = null;
+    } finally {
+      ready.value = true;
+    }
   }
 
   async function signInEmail(email: string, password: string) {
