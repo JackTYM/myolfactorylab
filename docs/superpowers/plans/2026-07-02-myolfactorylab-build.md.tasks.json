@@ -1,0 +1,17 @@
+{
+  "planPath": "docs/superpowers/plans/2026-07-02-myolfactorylab-build.md",
+  "tasks": [
+    { "id": 1, "subject": "Task 0: Nuxt foundation — config, theme, deps, ported utils", "status": "pending" },
+    { "id": 2, "subject": "Task 1: Database schema + RLS on Neon", "status": "pending", "blockedBy": [1] },
+    { "id": 3, "subject": "Task 2: Neon client plugin + auth store", "status": "pending", "blockedBy": [1] },
+    { "id": 4, "subject": "Task 3: Reference-data store + first-login seeding", "status": "pending", "blockedBy": [2, 3] },
+    { "id": 5, "subject": "Task 4: Combos / Notes / Wishlist Pinia stores", "status": "pending", "blockedBy": [2, 3] },
+    { "id": 6, "subject": "Task 5: Auth screen + route guard", "status": "pending", "blockedBy": [3, 4] },
+    { "id": 7, "subject": "Task 6: Icon + UI primitives port (icons.jsx, ui.jsx → Vue)", "status": "pending", "blockedBy": [1] },
+    { "id": 8, "subject": "Task 7: ComboCard + five screens port (cards.jsx, screens.jsx, screens2.jsx → Vue)", "status": "pending", "blockedBy": [4, 5, 7] },
+    { "id": 9, "subject": "Task 8: App shell — TabBar, Toast, navigation", "status": "pending", "blockedBy": [6, 8] },
+    { "id": 10, "subject": "Task 9: Photo storage — Cloudflare Pages Function + R2", "status": "pending", "blockedBy": [7] },
+    { "id": 11, "subject": "Task 10: Deploy — GitHub, Cloudflare Pages, trusted origins, end-to-end verification", "status": "pending", "blockedBy": [9, 10] }
+  ],
+  "lastUpdated": "2026-07-02T21:45:00Z"
+}
