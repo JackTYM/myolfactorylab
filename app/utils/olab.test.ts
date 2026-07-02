@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { daysSince, comboTitle, usageCounts, lastUsedMono } from './olab';
+import { daysSince, comboTitle, usageCounts, lastUsedMono, lastUsed, newCombo } from './olab';
 import type { Combo } from './olab';
 
 function stubCombo(overrides: Partial<Combo> = {}): Combo {
@@ -19,6 +19,10 @@ describe('daysSince', () => {
   });
   it('counts whole days between two dates', () => {
     expect(daysSince('2026-06-20', '2026-07-02')).toBe(12);
+  });
+  it('defaults now to the real current date when omitted', () => {
+    const today = new Date().toISOString().slice(0, 10);
+    expect(daysSince(today)).toBe(0);
   });
 });
 
@@ -53,5 +57,23 @@ describe('lastUsedMono', () => {
   it('reports USED TODAY for a same-day entry', () => {
     const today = new Date().toISOString().slice(0, 10);
     expect(lastUsedMono(stubCombo({ history: [today] }))).toBe('USED TODAY');
+  });
+});
+
+describe('lastUsed', () => {
+  it('picks the most recent date even when history is out of chronological order', () => {
+    const combo = stubCombo({ history: ['2026-05-01', '2026-06-25', '2026-01-10'] });
+    expect(lastUsed(combo)).toBe('2026-06-25');
+  });
+  it('drives lastUsedMono to reflect the most recent entry regardless of history order', () => {
+    const today = new Date().toISOString().slice(0, 10);
+    const combo = stubCombo({ history: ['2020-01-01', today, '2019-06-15'] });
+    expect(lastUsedMono(combo)).toBe('USED TODAY');
+  });
+});
+
+describe('newCombo', () => {
+  it('creates a combo with a null id (DB-generated, not client-generated)', () => {
+    expect(newCombo(['bodyWash']).id).toBeNull();
   });
 });
