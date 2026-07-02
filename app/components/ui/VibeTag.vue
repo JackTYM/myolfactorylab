@@ -1,31 +1,20 @@
 <script setup lang="ts">
-withDefaults(defineProps<{ name: string; color?: string; selected?: boolean }>(), {
+withDefaults(defineProps<{ name: string; color?: string; small?: boolean }>(), {
   color: 'var(--brass)',
-  selected: false,
+  small: false,
 });
-
-defineEmits<{ click: [] }>();
 </script>
 
 <template>
-  <button
-    type="button"
+  <span
+    class="mono"
     :style="{
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: '7px',
-      padding: '7px 14px',
-      borderRadius: '999px',
-      background: selected ? 'var(--surface-hi)' : 'var(--surface-2)',
-      border: selected ? '1px solid var(--brass)' : '1px solid var(--hairline)',
-      color: selected ? 'var(--text-hi)' : 'var(--text)',
-      fontSize: '13px',
-      fontWeight: 500,
-      transition: 'border-color 0.15s ease, background 0.15s ease, color 0.15s ease',
+      display: 'inline-flex', alignItems: 'center', gap: '6px',
+      fontSize: small ? '9px' : '10px', textTransform: 'uppercase', letterSpacing: '0.04em',
+      color: 'var(--text-dim)',
     }"
-    @click="$emit('click')"
   >
-    <span :style="{ width: '9px', height: '9px', borderRadius: '999px', background: color, flexShrink: 0 }" />
+    <span :style="{ width: '7px', height: '7px', borderRadius: '50%', background: color, flexShrink: 0 }" />
     {{ name }}
-  </button>
+  </span>
 </template>

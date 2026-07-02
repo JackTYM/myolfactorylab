@@ -6,6 +6,7 @@ const props = withDefaults(
     multi?: boolean;
     allowCustom?: boolean;
     placeholder?: string;
+    optionColor?: (opt: string) => string;
   }>(),
   { multi: false, allowCustom: false, placeholder: 'Select…' }
 );
@@ -99,7 +100,14 @@ onUnmounted(() => document.removeEventListener('mousedown', onDocClick));
     </button>
 
     <div v-if="multi && selectedArr.length" style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px">
-      <UiChip v-for="opt in selectedArr" :key="opt" :label="opt" removable @remove="removeChip(opt)" />
+      <UiChip
+        v-for="opt in selectedArr"
+        :key="opt"
+        :label="opt"
+        :color="optionColor?.(opt)"
+        removable
+        @remove="removeChip(opt)"
+      />
     </div>
 
     <div
@@ -121,6 +129,26 @@ onUnmounted(() => document.removeEventListener('mousedown', onDocClick));
       "
     >
       <button
+        type="button"
+        style="
+          width: 100%;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 9px 10px;
+          border-radius: 8px;
+          font-size: 13px;
+          font-style: italic;
+          color: var(--text-faint);
+          border-bottom: 1px solid var(--hairline);
+          margin-bottom: 4px;
+        "
+        @click="multi ? emit('update:modelValue', []) : (emit('update:modelValue', ''), (open = false))"
+      >
+        {{ multi ? 'Clear all' : 'None' }}
+      </button>
+
+      <button
         v-for="opt in options"
         :key="opt"
         type="button"
@@ -138,7 +166,13 @@ onUnmounted(() => document.removeEventListener('mousedown', onDocClick));
         }"
         @click="selectOption(opt)"
       >
-        <span>{{ opt }}</span>
+        <span style="display: flex; align-items: center; gap: 8px">
+          <span
+            v-if="optionColor"
+            :style="{ width: '7px', height: '7px', borderRadius: '50%', background: optionColor(opt), opacity: 0.9, flexShrink: 0 }"
+          />
+          <span>{{ opt }}</span>
+        </span>
         <Icon v-if="isSelected(opt)" name="check" :size="14" :stroke="2.2" style="color: var(--brass)" />
       </button>
 
