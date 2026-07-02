@@ -12,7 +12,6 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   'update:modelValue': [value: string | string[]];
-  customAdd: [value: string];
 }>();
 
 const root = ref<HTMLElement | null>(null);
@@ -58,7 +57,6 @@ function removeChip(opt: string) {
 function addCustom() {
   const v = customValue.value.trim();
   if (!v) return;
-  if (!props.options.includes(v)) emit('customAdd', v);
   if (props.multi) {
     if (!selectedArr.value.includes(v)) emit('update:modelValue', [...selectedArr.value, v]);
   } else {
