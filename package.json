@@ -10,8 +10,18 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@neondatabase/neon-js": "^0.6.2-beta",
+    "@pinia/nuxt": "^0.11.3",
+    "drizzle-orm": "^0.45.2",
     "nuxt": "^4.4.8",
+    "pinia": "^3.0.4",
     "vue": "^3.5.38",
     "vue-router": "^5.1.0"
+  },
+  "devDependencies": {
+    "@vue/test-utils": "^2.4.11",
+    "dotenv": "^17.4.2",
+    "drizzle-kit": "^0.31.10",
+    "vitest": "^4.1.9"
   }
 }

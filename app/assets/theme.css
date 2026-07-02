@@ -1,0 +1,86 @@
+:root {
+  /* base — warm near-black ink */
+  --ink-950: #0a0807;
+  --ink-900: #100d0a;
+  --surface-1: #16110d;
+  --surface-2: #1c1610;
+  --surface-3: #241d15;
+  --surface-hi: #2c2419;
+  /* chips kept neutral so bottle colors read true */
+  --chip: #e9e2d4;
+  --chip-2: #ded5c4;
+
+  --hairline: rgba(198,161,91,0.18);
+  --hairline-soft: rgba(247,239,222,0.07);
+
+  --brass: #c6a15b;
+  --brass-bright: #e6c886;
+  --brass-dim: #8c7038;
+
+  --text-hi: #f4ecdc;
+  --text: #d6cab4;
+  --text-dim: #a3957d;
+  --text-faint: #7a6f5c;
+
+  /* note-family jewels */
+  --fam-woody: #b97f47;
+  --fam-amber: #b23c4a;
+  --fam-citrus: #c2a23c;
+  --fam-floral: #9a5fc0;
+  --fam-aromatic: #3d78ba;
+  --fam-green: #2f9367;
+  --fam-gourmand: #b55f3c;
+
+  /* status — deliberately brighter / cleaner than the jewels */
+  --stat-fresh: #5ec47f;
+  --stat-mod: #e8b73e;
+  --stat-neg: #ec5b54;
+  --stat-none: #8a8174;
+
+  --serif: 'Playfair Display', Georgia, serif;
+  --sans: 'Hanken Grotesk', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body {
+  background:
+    radial-gradient(120% 80% at 50% -10%, #181310 0%, var(--ink-950) 55%, #060504 100%);
+  font-family: var(--sans);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ── scrollbars (in-app) ── */
+.ol-scroll { overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.ol-scroll::-webkit-scrollbar { width: 0; height: 0; }
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* specimen-label graph texture, applied to select panels */
+.graph-tex {
+  background-image:
+    linear-gradient(var(--hairline-soft) 1px, transparent 1px),
+    linear-gradient(90deg, var(--hairline-soft) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+
+/* type helpers */
+.serif { font-family: var(--serif); }
+.mono { font-family: var(--mono); }
+.kicker {
+  font-family: var(--mono); text-transform: uppercase;
+  letter-spacing: 0.18em; font-size: 10px; font-weight: 500;
+  color: var(--text-faint);
+}
+
+button { font-family: inherit; color: inherit; cursor: pointer; border: none; background: none; }
+button:focus-visible { outline: 2px solid var(--brass); outline-offset: 2px; }
+input, textarea { font-family: inherit; }
+::selection { background: rgba(198,161,91,0.3); color: #fff; }
+
+@keyframes ol-fade-up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes ol-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ol-scale-in { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: none; } }
