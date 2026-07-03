@@ -32,7 +32,8 @@ async function verifyUserId(request: Request, env: Env): Promise<string | null> 
     const payload = JSON.parse(atob(payloadB64.replace(/-/g, '+').replace(/_/g, '/')));
     if (payload.exp && Date.now() / 1000 > payload.exp) return null;
     return payload.sub ?? null;
-  } catch {
+  } catch (err) {
+    console.error('verifyUserId failed', err);
     return null;
   }
 }
