@@ -11,23 +11,30 @@ async function verifyUserId(request: Request, env: Env): Promise<string | null> 
   const [headerB64, payloadB64, signatureB64] = token.split('.');
   if (!headerB64 || !payloadB64 || !signatureB64) return null;
 
-  const header = JSON.parse(atob(headerB64.replace(/-/g, '+').replace(/_/g, '/')));
-  const jwksRes = await fetch(env.NEON_JWKS_URL);
-  const jwks = await jwksRes.json<{ keys: JsonWebKey[] }>();
-  const jwk = (jwks.keys as any[]).find((k) => k.kid === header.kid);
-  if (!jwk) return null;
+  // Any malformed base64/JSON/key material below (e.g. a token-shaped but
+  // garbage value) must resolve to "invalid" (null -> 401), never throw
+  // and surface as an uncaught 500.
+  try {
+    const header = JSON.parse(atob(headerB64.replace(/-/g, '+').replace(/_/g, '/')));
+    const jwksRes = await fetch(env.NEON_JWKS_URL);
+    const jwks = await jwksRes.json<{ keys: JsonWebKey[] }>();
+    const jwk = (jwks.keys as any[]).find((k) => k.kid === header.kid);
+    if (!jwk) return null;
 
-  // Neon Auth (Better Auth) signs JWTs with EdDSA (Ed25519), not RS256 —
-  // verified against the live JWKS endpoint before implementing this.
-  const key = await crypto.subtle.importKey('jwk', jwk, { name: 'Ed25519' }, false, ['verify']);
-  const data = new TextEncoder().encode(`${headerB64}.${payloadB64}`);
-  const signature = Uint8Array.from(atob(signatureB64.replace(/-/g, '+').replace(/_/g, '/')), (c) => c.charCodeAt(0));
-  const valid = await crypto.subtle.verify('Ed25519', key, signature, data);
-  if (!valid) return null;
+    // Neon Auth (Better Auth) signs JWTs with EdDSA (Ed25519), not RS256 —
+    // verified against the live JWKS endpoint before implementing this.
+    const key = await crypto.subtle.importKey('jwk', jwk, { name: 'Ed25519' }, false, ['verify']);
+    const data = new TextEncoder().encode(`${headerB64}.${payloadB64}`);
+    const signature = Uint8Array.from(atob(signatureB64.replace(/-/g, '+').replace(/_/g, '/')), (c) => c.charCodeAt(0));
+    const valid = await crypto.subtle.verify('Ed25519', key, signature, data);
+    if (!valid) return null;
 
-  const payload = JSON.parse(atob(payloadB64.replace(/-/g, '+').replace(/_/g, '/')));
-  if (payload.exp && Date.now() / 1000 > payload.exp) return null;
-  return payload.sub ?? null;
+    const payload = JSON.parse(atob(payloadB64.replace(/-/g, '+').replace(/_/g, '/')));
+    if (payload.exp && Date.now() / 1000 > payload.exp) return null;
+    return payload.sub ?? null;
+  } catch {
+    return null;
+  }
 }
 
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
