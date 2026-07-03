@@ -8,7 +8,7 @@ export const useAuthStore = defineStore('auth', () => {
     const neon = useNeon();
     try {
       const { data } = await neon.auth.getSession();
-      user.value = data?.session?.user ?? null;
+      user.value = data?.user ?? null;
     } catch {
       user.value = null;
     } finally {
