@@ -11,7 +11,7 @@
     { "id": 8, "subject": "Task 7: ComboCard + five screens port (cards.jsx, screens.jsx, screens2.jsx → Vue)", "status": "completed", "blockedBy": [4, 5, 7] },
     { "id": 9, "subject": "Task 8: App shell — TabBar, Toast, navigation", "status": "completed", "blockedBy": [6, 8] },
     { "id": 10, "subject": "Task 9: Photo storage — Cloudflare Pages Function + R2", "status": "completed", "blockedBy": [7] },
-    { "id": 11, "subject": "Task 10: Deploy — GitHub, Cloudflare Pages, trusted origins, end-to-end verification", "status": "pending", "blockedBy": [9, 10] }
+    { "id": 11, "subject": "Task 10: Deploy — GitHub, Cloudflare Pages, trusted origins, end-to-end verification", "status": "completed", "blockedBy": [9, 10] }
   ],
-  "lastUpdated": "2026-07-03T01:20:00Z"
+  "lastUpdated": "2026-07-03T06:15:00Z"
 }
