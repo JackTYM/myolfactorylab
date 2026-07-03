@@ -34,9 +34,24 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       neonDataApiUrl: '',
-      neonAuthUrl: '',
+      neonAuthUrl: '/auth',
       r2PublicUrl: '',
       uploadEndpoint: '/api/photos',
+    },
+  },
+  // Local dev has no Cloudflare Pages Functions runtime, so mirror the
+  // production /auth proxy (see functions/auth/[[path]].ts) here too —
+  // same relative path in both, same cookie-domain stripping.
+  vite: {
+    server: {
+      proxy: {
+        '/auth': {
+          target: 'https://ep-dark-meadow-atpy3tcm.neonauth.c-9.us-east-1.aws.neon.tech/neondb/auth',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/auth/, ''),
+          cookieDomainRewrite: { '*': '' },
+        },
+      },
     },
   },
 })

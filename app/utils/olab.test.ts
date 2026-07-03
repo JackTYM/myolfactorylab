@@ -37,6 +37,10 @@ describe('comboTitle', () => {
   it('falls back to Untitled Combo when nothing is filled', () => {
     expect(comboTitle(stubCombo(), layerKeys)).toBe('Untitled Combo');
   });
+  it('signals the other ingredients instead of silently dropping them', () => {
+    const combo = stubCombo({ layers: { bodyWash: ['Animal Cracker'], perfumesToppers: ['Vanilla Bean'] } });
+    expect(comboTitle(combo, ['bodyWash', 'lotion', 'perfumesToppers'])).toBe('Vanilla Bean + 1 other');
+  });
 });
 
 describe('usageCounts', () => {

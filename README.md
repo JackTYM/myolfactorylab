@@ -61,6 +61,11 @@ npx vue-tsc --noEmit  # typecheck
    - Environment variable `NEON_JWKS_URL` — the JWKS endpoint from your Neon Auth URL
      (`{NEON_AUTH_URL}/.well-known/jwks.json`)
    - R2 bucket binding named `PHOTOS`, mapped to your R2 bucket
+   - `functions/auth/[[path]].ts` needs no config — it proxies `/auth/*` to the hardcoded Neon
+     Auth host so the session cookie is set first-party (a direct cross-origin auth URL makes the
+     cookie third-party, which iOS Safari's WebClip storage silently drops — logins never persist
+     once the app is added to the Home Screen). `NUXT_PUBLIC_NEON_AUTH_URL` must be the relative
+     `/auth` (as in `.env.example`), not the direct Neon host, for this to take effect.
 
 4. **Neon Auth trusted origins** — add your deployed Pages URL (`https://your-project.pages.dev`)
    via the Neon Console (Auth → trusted origins) or the Neon MCP `configure_neon_auth` tool.
