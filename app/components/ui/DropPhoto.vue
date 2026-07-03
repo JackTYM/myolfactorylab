@@ -7,11 +7,11 @@ const config = useRuntimeConfig();
 const fileInput = ref<HTMLInputElement | null>(null);
 const isDragging = ref(false);
 const uploading = ref(false);
+const cropFile = ref<File | null>(null);
 
 const src = computed(() => (props.photoKey ? `${config.public.r2PublicUrl}/${props.photoKey}` : null));
 
-async function uploadFile(file: File) {
-  if (!file || uploading.value) return;
+async function uploadBlob(blob: Blob) {
   uploading.value = true;
   try {
     const neon = useNeon();
@@ -22,9 +22,9 @@ async function uploadFile(file: File) {
       method: 'POST',
       headers: {
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        'Content-Type': file.type || 'application/octet-stream',
+        'Content-Type': blob.type || 'application/octet-stream',
       },
-      body: file,
+      body: blob,
     });
     if (!res.ok) throw new Error(`Upload failed: ${res.status}`);
     const json = await res.json();
@@ -42,14 +42,23 @@ function openPicker() {
 
 function onFileChange(e: Event) {
   const file = (e.target as HTMLInputElement).files?.[0];
-  if (file) uploadFile(file);
+  if (file) cropFile.value = file;
   (e.target as HTMLInputElement).value = '';
 }
 
 function onDrop(e: DragEvent) {
   isDragging.value = false;
   const file = e.dataTransfer?.files?.[0];
-  if (file) uploadFile(file);
+  if (file) cropFile.value = file;
+}
+
+function onCropConfirm(blob: Blob) {
+  cropFile.value = null;
+  uploadBlob(blob);
+}
+
+function onCropCancel() {
+  cropFile.value = null;
 }
 </script>
 
@@ -134,6 +143,8 @@ function onDrop(e: DragEvent) {
     >
       Uploading…
     </div>
+
+    <UiPhotoCropper v-if="cropFile" :file="cropFile" :aspect="4 / 3" @confirm="onCropConfirm" @cancel="onCropCancel" />
   </div>
 </template>
 
