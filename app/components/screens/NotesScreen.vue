@@ -30,7 +30,7 @@ function onDelete(id: string) {
         <div style="font-family: var(--serif); font-size: 18px; color: var(--text-dim)">No notes yet</div>
         <div style="font-size: 12.5px; margin-top: 6px">Tap + to start one.</div>
       </div>
-      <div v-else style="display: flex; flex-direction: column; gap: 14px">
+      <div v-else style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px">
         <div
           v-for="n in notesStore.notes"
           :key="n.id"

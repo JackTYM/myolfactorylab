@@ -82,12 +82,13 @@ const navHidden = computed(() => !!editor.value);
   <AuthScreen v-else-if="!auth.user" />
   <div
     v-else-if="bootstrapError"
-    style="height: 100vh; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 24px; text-align: center"
+    class="app-shell"
+    style="align-items: center; justify-content: center; gap: 16px; padding: 24px; text-align: center"
   >
     <p style="color: var(--text-dim); font-size: 14px; margin: 0">{{ bootstrapError }}</p>
     <UiPrimaryButton @click="bootstrapData">Try again</UiPrimaryButton>
   </div>
-  <div v-else style="height: 100vh; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; position: relative">
+  <div v-else class="app-shell">
     <div style="flex: 1; min-height: 0; display: flex; flex-direction: column">
       <ScreensComboEditorScreen
         v-if="editor"
@@ -107,3 +108,21 @@ const navHidden = computed(() => !!editor.value);
     <Toast :message="toast" :nav-hidden="navHidden" />
   </div>
 </template>
+
+<style scoped>
+.app-shell {
+  height: 100vh;
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+@media (min-width: 720px) {
+  .app-shell {
+    max-width: 1080px;
+    box-shadow: 0 0 0 1px var(--hairline);
+  }
+}
+</style>

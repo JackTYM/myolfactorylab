@@ -55,9 +55,11 @@ const totalWears = computed(() => rows.value.reduce((s, r) => s + r.n, 0));
       <ScreensSummaryStat :value="totalWears" :label="`Wears · ${winLabel}`" color="var(--brass-bright)" />
     </div>
     <div class="ol-scroll" style="flex: 1; padding: 10px 18px 18px">
-      <ScreensReportGroup :title="`Used · ${winLabel}`" dot-color="var(--stat-fresh)" :rows="used" show-count :empty="`Nothing used in the ${winLabel}.`" @open="emit('open', $event)" />
-      <div style="height: 20px" />
-      <ScreensReportGroup :title="`Not used · ${winLabel}`" dot-color="var(--stat-neg)" :rows="unused" empty="Everything here has been used — nice." @open="emit('open', $event)" />
+      <div style="max-width: 720px; margin: 0 auto">
+        <ScreensReportGroup :title="`Used · ${winLabel}`" dot-color="var(--stat-fresh)" :rows="used" show-count :empty="`Nothing used in the ${winLabel}.`" @open="emit('open', $event)" />
+        <div style="height: 20px" />
+        <ScreensReportGroup :title="`Not used · ${winLabel}`" dot-color="var(--stat-neg)" :rows="unused" empty="Everything here has been used — nice." @open="emit('open', $event)" />
+      </div>
     </div>
   </div>
 </template>

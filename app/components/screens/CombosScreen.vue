@@ -132,7 +132,7 @@ function clearAll() {
         <div style="font-size: 12.5px; margin-top: 6px">Try loosening the search or filters.</div>
         <button v-if="activeCount > 0" type="button" style="margin-top: 16px; color: var(--brass-bright); font-size: 13px; font-weight: 600" @click="clearAll">Clear filters</button>
       </div>
-      <div v-else style="display: flex; flex-direction: column; gap: 14px">
+      <div v-else style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px">
         <CardsComboCard v-for="c in filtered" :key="c.id" :combo="c" @open="emit('open', $event)" />
       </div>
     </div>

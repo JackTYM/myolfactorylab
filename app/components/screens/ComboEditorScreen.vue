@@ -69,6 +69,7 @@ function vibeOptionColor(name: string) {
     </SubBar>
 
     <div class="ol-scroll" style="flex: 1; padding: 16px 18px 18px">
+      <div style="max-width: 640px; margin: 0 auto">
       <div style="margin-bottom: 16px">
         <UiDropPhoto v-model:photo-key="d.photoKey" :combo-id="d.id ?? 'draft'" />
       </div>
@@ -190,10 +191,13 @@ function vibeOptionColor(name: string) {
       <div class="kicker" style="margin: 24px 0 12px">Notes</div>
       <UiTextArea v-model="d.note" placeholder="Your own observations — longevity, compliments, tweaks to try next time…" :rows="5" />
       <div style="height: 12px" />
+      </div>
     </div>
 
     <div style="flex-shrink: 0; padding: 12px 16px 26px; border-top: 1px solid var(--hairline-soft); background: rgba(10,8,7,0.5)">
-      <UiPrimaryButton full @click="emit('save', d)"><Icon name="save" :size="18" /> {{ isNew ? 'Save combo' : 'Save changes' }}</UiPrimaryButton>
+      <div style="max-width: 640px; margin: 0 auto">
+        <UiPrimaryButton full @click="emit('save', d)"><Icon name="save" :size="18" /> {{ isNew ? 'Save combo' : 'Save changes' }}</UiPrimaryButton>
+      </div>
     </div>
 
     <Sheet v-if="confirmDel" title="Delete this combo?" height="auto" @close="confirmDel = false">

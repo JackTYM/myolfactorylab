@@ -26,7 +26,7 @@ function onChange(cat: string, v: string) {
     <AppHeader :kicker="`${filledCount} of ${categories.length} noted`" title="Wish List" />
     <div class="ol-scroll" style="flex: 1; padding: 14px 18px 18px">
       <p style="margin: 0 0 16px; font-size: 13px; color: var(--text-dim); line-height: 1.55">Jot down what you're hunting for under each category.</p>
-      <div style="display: flex; flex-direction: column; gap: 14px">
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px">
         <div
           v-for="cat in categories"
           :key="cat"
