@@ -1,11 +1,62 @@
 import { defineStore } from 'pinia';
 import { DEFAULT_LAYERS, DEFAULT_SCENTS, DEFAULT_VIBES, DEFAULT_WISH_CATEGORIES } from '~/utils/seedData';
 
+export interface Layer {
+  id: string;
+  key: string;
+  label: string;
+  shortLabel: string;
+  sortOrder: number;
+}
+
+export interface Vibe {
+  id: string;
+  name: string;
+  color: string;
+  logic: string;
+  weight: string;
+  secretWord: string;
+  secretText: string;
+  bestFor: string;
+  sortOrder: number;
+}
+
+export interface Scent {
+  id: string;
+  name: string;
+  layers: string[];
+}
+
+export interface WishCategory {
+  id: string;
+  name: string;
+  sortOrder: number;
+}
+
+function layerFromRow(row: any): Layer {
+  return { id: row.id, key: row.key, label: row.label, shortLabel: row.short_label, sortOrder: row.sort_order };
+}
+
+function vibeFromRow(row: any): Vibe {
+  return {
+    id: row.id, name: row.name, color: row.color, logic: row.logic, weight: row.weight,
+    secretWord: row.secret_word, secretText: row.secret_text, bestFor: row.best_for, sortOrder: row.sort_order,
+  };
+}
+
+function scentFromRow(row: any): Scent {
+  return { id: row.id, name: row.name, layers: row.layers ?? [] };
+}
+
+function wishCategoryFromRow(row: any): WishCategory {
+  return { id: row.id, name: row.name, sortOrder: row.sort_order };
+}
+
 export const useReferenceStore = defineStore('reference', () => {
-  const layers = ref<any[]>([]);
-  const vibes = ref<any[]>([]);
-  const scents = ref<any[]>([]);
-  const wishCategories = ref<any[]>([]);
+  const layers = ref<Layer[]>([]);
+  const vibes = ref<Vibe[]>([]);
+  const scents = ref<Scent[]>([]);
+  const wishCategories = ref<WishCategory[]>([]);
   const loaded = ref(false);
 
   async function fetchAll() {
@@ -16,10 +67,10 @@ export const useReferenceStore = defineStore('reference', () => {
       neon.from('scents').select('*').order('name', { ascending: true }),
       neon.from('wish_categories').select('*').order('sort_order', { ascending: true }),
     ]);
-    layers.value = l.data ?? [];
-    vibes.value = v.data ?? [];
-    scents.value = s.data ?? [];
-    wishCategories.value = w.data ?? [];
+    layers.value = (l.data ?? []).map(layerFromRow);
+    vibes.value = (v.data ?? []).map(vibeFromRow);
+    scents.value = (s.data ?? []).map(scentFromRow);
+    wishCategories.value = (w.data ?? []).map(wishCategoryFromRow);
   }
 
   async function seed() {
