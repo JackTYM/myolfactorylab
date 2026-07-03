@@ -44,6 +44,7 @@
 
 * { box-sizing: border-box; }
 html, body { margin: 0; height: 100%; }
+html { background: var(--ink-950); }
 body {
   background:
     radial-gradient(120% 80% at 50% -10%, #181310 0%, var(--ink-950) 55%, #060504 100%);

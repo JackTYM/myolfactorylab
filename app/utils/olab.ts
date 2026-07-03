@@ -51,11 +51,12 @@ export function allScents(combo: Combo, layerKeys: string[]): string[] {
 
 export function comboTitle(combo: Combo, layerKeys: string[]): string {
   if (combo.name && combo.name.trim()) return combo.name.trim();
+  const scents = allScents(combo, layerKeys);
+  if (!scents.length) return 'Untitled Combo';
   const pt = layerArr(combo, 'perfumesToppers');
-  if (pt.length) return pt[0];
-  const f = filledLayers(combo, layerKeys);
-  if (f.length) return layerArr(combo, f[0])[0];
-  return 'Untitled Combo';
+  const lead = pt.length ? pt[0] : scents[0];
+  const othersCount = scents.length - 1;
+  return othersCount > 0 ? `${lead} + ${othersCount} other${othersCount === 1 ? '' : 's'}` : lead;
 }
 
 export function history(combo: Combo): string[] {

@@ -117,6 +117,7 @@ const navHidden = computed(() => !!editor.value);
   display: flex;
   flex-direction: column;
   position: relative;
+  padding-top: env(safe-area-inset-top);
 }
 
 @media (min-width: 720px) {
