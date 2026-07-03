@@ -75,24 +75,33 @@ export const useReferenceStore = defineStore('reference', () => {
 
   async function seed() {
     const neon = useNeon();
-    await neon.from('layers').insert(
-      DEFAULT_LAYERS.map((l, i) => ({ key: l.key, label: l.label, short_label: l.shortLabel, sort_order: i }))
-    );
-    await neon.from('vibes').insert(
-      DEFAULT_VIBES.map((v, i) => ({
-        name: v.name, color: v.color, logic: v.logic, weight: v.weight,
-        secret_word: v.secretWord, secret_text: v.secretText, best_for: v.bestFor, sort_order: i,
-      }))
-    );
-    await neon.from('scents').insert(DEFAULT_SCENTS.map((s) => ({ name: s.name, layers: s.layers })));
-    await neon.from('wish_categories').insert(
-      DEFAULT_WISH_CATEGORIES.map((name, i) => ({ name, sort_order: i }))
-    );
+    if (layers.value.length === 0) {
+      await neon.from('layers').insert(
+        DEFAULT_LAYERS.map((l, i) => ({ key: l.key, label: l.label, short_label: l.shortLabel, sort_order: i }))
+      );
+    }
+    if (vibes.value.length === 0) {
+      await neon.from('vibes').insert(
+        DEFAULT_VIBES.map((v, i) => ({
+          name: v.name, color: v.color, logic: v.logic, weight: v.weight,
+          secret_word: v.secretWord, secret_text: v.secretText, best_for: v.bestFor, sort_order: i,
+        }))
+      );
+    }
+    if (scents.value.length === 0) {
+      await neon.from('scents').insert(DEFAULT_SCENTS.map((s) => ({ name: s.name, layers: s.layers })));
+    }
+    if (wishCategories.value.length === 0) {
+      await neon.from('wish_categories').insert(
+        DEFAULT_WISH_CATEGORIES.map((name, i) => ({ name, sort_order: i }))
+      );
+    }
   }
 
   async function load() {
     await fetchAll();
-    if (layers.value.length === 0) {
+    const needsSeed = layers.value.length === 0 || vibes.value.length === 0 || scents.value.length === 0 || wishCategories.value.length === 0;
+    if (needsSeed) {
       await seed();
       await fetchAll();
     }
