@@ -58,6 +58,7 @@ export const useReferenceStore = defineStore('reference', () => {
   const scents = ref<Scent[]>([]);
   const wishCategories = ref<WishCategory[]>([]);
   const loaded = ref(false);
+  let loadPromise: Promise<void> | null = null;
 
   async function fetchAll() {
     const neon = useNeon();
@@ -99,13 +100,20 @@ export const useReferenceStore = defineStore('reference', () => {
   }
 
   async function load() {
-    await fetchAll();
-    const needsSeed = layers.value.length === 0 || vibes.value.length === 0 || scents.value.length === 0 || wishCategories.value.length === 0;
-    if (needsSeed) {
-      await seed();
+    // Guard against concurrent callers (e.g. app.vue's onMounted + watch both
+    // firing right after sign-in) triggering fetchAll/seed at the same time,
+    // which can race and attempt to insert duplicate seed rows.
+    if (loadPromise) return loadPromise;
+    loadPromise = (async () => {
       await fetchAll();
-    }
-    loaded.value = true;
+      const needsSeed = layers.value.length === 0 || vibes.value.length === 0 || scents.value.length === 0 || wishCategories.value.length === 0;
+      if (needsSeed) {
+        await seed();
+        await fetchAll();
+      }
+      loaded.value = true;
+    })();
+    return loadPromise;
   }
 
   function scentsForLayer(layerKey: string): string[] {
