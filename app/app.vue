@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Combo, Tab } from '~/utils/olab';
 import { comboTitle, newCombo } from '~/utils/olab';
+import { retryAsync } from '~/utils/retry';
 
 const auth = useAuthStore();
 const reference = useReferenceStore();
@@ -12,6 +13,7 @@ const tab = ref<Tab>('combos');
 const editor = ref<{ combo: Combo; isNew: boolean } | null>(null);
 const toast = ref<string | null>(null);
 let toastTimer: ReturnType<typeof setTimeout> | null = null;
+const bootstrapError = ref<string | null>(null);
 
 function showToast(msg: string) {
   toast.value = msg;
@@ -20,7 +22,20 @@ function showToast(msg: string) {
 }
 
 async function bootstrapData() {
-  await Promise.all([reference.load(), combosStore.load(), notesStore.load(), wishlistStore.load()]);
+  bootstrapError.value = null;
+  try {
+    // reference.load() first (4 concurrent requests internally), then the rest — avoids
+    // firing 7+ concurrent authenticated requests in the same instant right after sign-in,
+    // which empirically triggers intermittent CORS/connection failures on a fresh session.
+    await retryAsync(() => reference.load());
+    await Promise.all([
+      retryAsync(() => combosStore.load()),
+      retryAsync(() => notesStore.load()),
+      retryAsync(() => wishlistStore.load()),
+    ]);
+  } catch {
+    bootstrapError.value = "Couldn't load your data. Check your connection and try again.";
+  }
 }
 
 onMounted(async () => {
@@ -65,6 +80,13 @@ const navHidden = computed(() => !!editor.value);
 <template>
   <div v-if="!auth.ready" />
   <AuthScreen v-else-if="!auth.user" />
+  <div
+    v-else-if="bootstrapError"
+    style="height: 100vh; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 24px; text-align: center"
+  >
+    <p style="color: var(--text-dim); font-size: 14px; margin: 0">{{ bootstrapError }}</p>
+    <UiPrimaryButton @click="bootstrapData">Try again</UiPrimaryButton>
+  </div>
   <div v-else style="height: 100vh; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; position: relative">
     <div style="flex: 1; min-height: 0; display: flex; flex-direction: column">
       <ScreensComboEditorScreen
