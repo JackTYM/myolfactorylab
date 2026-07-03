@@ -65,7 +65,7 @@ const navHidden = computed(() => !!editor.value);
 <template>
   <div v-if="!auth.ready" />
   <AuthScreen v-else-if="!auth.user" />
-  <div v-else style="height: 100vh; display: flex; flex-direction: column; position: relative">
+  <div v-else style="height: 100vh; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; position: relative">
     <div style="flex: 1; min-height: 0; display: flex; flex-direction: column">
       <ScreensComboEditorScreen
         v-if="editor"
