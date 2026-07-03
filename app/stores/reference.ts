@@ -134,5 +134,14 @@ export const useReferenceStore = defineStore('reference', () => {
     return layers.value.map((l) => l.key);
   }
 
-  return { layers, vibes, scents, wishCategories, loaded, load, scentsForLayer, layerKeys };
+  function reset() {
+    layers.value = [];
+    vibes.value = [];
+    scents.value = [];
+    wishCategories.value = [];
+    loaded.value = false;
+    loadPromise = null;
+  }
+
+  return { layers, vibes, scents, wishCategories, loaded, load, scentsForLayer, layerKeys, reset };
 });

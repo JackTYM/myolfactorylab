@@ -4,13 +4,13 @@ const reference = useReferenceStore();
 
 onMounted(async () => {
   await auth.init();
-  if (auth.user) await reference.load();
 });
 
 watch(
   () => auth.user,
   async (user) => {
     if (user) await reference.load();
+    else reference.reset();
   }
 );
 </script>

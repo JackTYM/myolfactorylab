@@ -15,7 +15,7 @@ async function submit() {
       ? await auth.signInEmail(email.value, password.value)
       : await auth.signUpEmail(email.value, password.value, name.value);
   busy.value = false;
-  if (result.error) error.value = result.error.message;
+  if (result.error) error.value = result.error.message ?? 'Something went wrong.';
 }
 
 async function google() {
