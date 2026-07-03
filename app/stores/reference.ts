@@ -68,6 +68,9 @@ export const useReferenceStore = defineStore('reference', () => {
       neon.from('scents').select('*').order('name', { ascending: true }),
       neon.from('wish_categories').select('*').order('sort_order', { ascending: true }),
     ]);
+    if (l.error || v.error || s.error || w.error) {
+      throw new Error('Failed to load reference data: ' + (l.error || v.error || s.error || w.error)?.message);
+    }
     layers.value = (l.data ?? []).map(layerFromRow);
     vibes.value = (v.data ?? []).map(vibeFromRow);
     scents.value = (s.data ?? []).map(scentFromRow);
@@ -77,25 +80,29 @@ export const useReferenceStore = defineStore('reference', () => {
   async function seed() {
     const neon = useNeon();
     if (layers.value.length === 0) {
-      await neon.from('layers').insert(
+      const { error } = await neon.from('layers').insert(
         DEFAULT_LAYERS.map((l, i) => ({ key: l.key, label: l.label, short_label: l.shortLabel, sort_order: i }))
       );
+      if (error) throw new Error('Failed to seed layers: ' + error.message);
     }
     if (vibes.value.length === 0) {
-      await neon.from('vibes').insert(
+      const { error } = await neon.from('vibes').insert(
         DEFAULT_VIBES.map((v, i) => ({
           name: v.name, color: v.color, logic: v.logic, weight: v.weight,
           secret_word: v.secretWord, secret_text: v.secretText, best_for: v.bestFor, sort_order: i,
         }))
       );
+      if (error) throw new Error('Failed to seed vibes: ' + error.message);
     }
     if (scents.value.length === 0) {
-      await neon.from('scents').insert(DEFAULT_SCENTS.map((s) => ({ name: s.name, layers: s.layers })));
+      const { error } = await neon.from('scents').insert(DEFAULT_SCENTS.map((s) => ({ name: s.name, layers: s.layers })));
+      if (error) throw new Error('Failed to seed scents: ' + error.message);
     }
     if (wishCategories.value.length === 0) {
-      await neon.from('wish_categories').insert(
+      const { error } = await neon.from('wish_categories').insert(
         DEFAULT_WISH_CATEGORIES.map((name, i) => ({ name, sort_order: i }))
       );
+      if (error) throw new Error('Failed to seed wish categories: ' + error.message);
     }
   }
 
@@ -112,7 +119,10 @@ export const useReferenceStore = defineStore('reference', () => {
         await fetchAll();
       }
       loaded.value = true;
-    })();
+    })().catch((err) => {
+      loadPromise = null;
+      throw err;
+    });
     return loadPromise;
   }
 
