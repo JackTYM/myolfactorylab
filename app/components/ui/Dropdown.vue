@@ -95,7 +95,13 @@ onUnmounted(() => document.removeEventListener('mousedown', onDocClick));
       "
       @click="toggleOpen"
     >
-      <span :style="{ color: selectedArr.length ? 'var(--text-hi)' : 'var(--text-faint)' }">{{ triggerLabel }}</span>
+      <span style="display: flex; align-items: center; gap: 8px; min-width: 0">
+        <span
+          v-if="!multi && selectedArr.length && optionColor"
+          :style="{ width: '8px', height: '8px', borderRadius: '50%', background: optionColor(selectedArr[0]), flexShrink: 0 }"
+        />
+        <span :style="{ color: selectedArr.length ? 'var(--text-hi)' : 'var(--text-faint)' }">{{ triggerLabel }}</span>
+      </span>
       <Icon name="chevronDown" :size="16" :style="{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s ease' }" />
     </button>
 
