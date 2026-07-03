@@ -82,7 +82,7 @@ function clearAll() {
 <template>
   <div style="flex: 1; display: flex; flex-direction: column; min-height: 0">
     <div style="display: flex; justify-content: center; padding: 10px 8px 0">
-      <div style="font-family: var(--serif); font-size: 20px; letter-spacing: 0.04em; color: var(--text-hi)">MyOlfactoryLab</div>
+      <img src="/logo.png" alt="MyOlfactoryLab" style="max-width: 220px; width: 100%; height: auto; display: block" />
     </div>
     <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 18px 4px">
       <div class="kicker">{{ combosStore.combos.length }} Combination{{ combosStore.combos.length === 1 ? '' : 's' }}</div>
