@@ -76,7 +76,7 @@ function onCropCancel() {
       cursor: uploading ? 'default' : 'pointer',
       transition: 'border-color 0.15s ease',
     }"
-    @click="!uploading && openPicker()"
+    @click="!uploading && !cropFile && openPicker()"
     @dragover.prevent="isDragging = true"
     @dragleave.prevent="isDragging = false"
     @drop.prevent="onDrop"

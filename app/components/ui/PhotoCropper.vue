@@ -171,6 +171,7 @@ const HANDLES: { corner: Corner; style: Record<string, string> }[] = [
       padding: 20px;
       gap: 20px;
     "
+    @click.stop
   >
     <h3 style="margin: 0; font-family: var(--serif); font-size: 18px; color: var(--text-hi); font-weight: 600; align-self: center">
       Adjust photo
