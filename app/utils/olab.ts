@@ -2,6 +2,8 @@
 // Layer keys are no longer a fixed constant (layers are per-user editable, see stores/reference.ts
 // in a later task), so any function that needs them takes `layerKeys: string[]` as a parameter.
 
+export type Tab = 'combos' | 'wish' | 'report' | 'notes';
+
 export interface Combo {
   id: string | null;
   name: string;

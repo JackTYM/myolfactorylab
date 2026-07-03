@@ -1,6 +1,8 @@
 <script setup lang="ts">
-defineProps<{ active: string }>();
-const emit = defineEmits<{ change: [tab: string]; new: [] }>();
+import type { Tab } from '~/utils/olab';
+
+defineProps<{ active: Tab }>();
+const emit = defineEmits<{ change: [tab: Tab]; new: [] }>();
 
 const TABS = [
   { key: 'combos', icon: 'rack', label: 'Combos' },
@@ -44,7 +46,7 @@ const TABS = [
           display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', flex: 1, paddingTop: '4px',
           color: active === t.key ? 'var(--brass-bright)' : 'var(--text-faint)', transition: 'color .18s',
         }"
-        @click="emit('change', t.key)"
+        @click="emit('change', t.key as Tab)"
       >
         <Icon :name="t.icon" :size="23" :stroke="active === t.key ? 1.9 : 1.6" />
         <span class="mono" style="font-size: 8.5px; letter-spacing: 0.08em; text-transform: uppercase">{{ t.label }}</span>

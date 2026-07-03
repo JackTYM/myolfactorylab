@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Combo } from '~/utils/olab';
+import type { Combo, Tab } from '~/utils/olab';
 import { comboTitle, newCombo } from '~/utils/olab';
 
 const auth = useAuthStore();
@@ -8,7 +8,7 @@ const combosStore = useCombosStore();
 const notesStore = useNotesStore();
 const wishlistStore = useWishlistStore();
 
-const tab = ref<'combos' | 'wish' | 'report' | 'notes'>('combos');
+const tab = ref<Tab>('combos');
 const editor = ref<{ combo: Combo; isNew: boolean } | null>(null);
 const toast = ref<string | null>(null);
 let toastTimer: ReturnType<typeof setTimeout> | null = null;
@@ -81,7 +81,7 @@ const navHidden = computed(() => !!editor.value);
       <ScreensReportScreen v-else-if="tab === 'report'" @open="openCombo" />
       <ScreensNotesScreen v-else-if="tab === 'notes'" />
     </div>
-    <TabBar v-if="!navHidden" :active="tab" @change="(t) => (tab = t as typeof tab)" @new="openNew" />
+    <TabBar v-if="!navHidden" :active="tab" @change="(t) => (tab = t)" @new="openNew" />
     <Toast :message="toast" :nav-hidden="navHidden" />
   </div>
 </template>
