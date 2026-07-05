@@ -1,0 +1,1 @@
+ALTER TABLE "combos" ADD COLUMN "secondary_vibe" text DEFAULT '' NOT NULL;

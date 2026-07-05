@@ -15,6 +15,7 @@ export const combos = pgTable(
     season: text('season').notNull().default('Spring/Summer'),
     highHeat: boolean('high_heat').notNull().default(false),
     vibe: text('vibe').notNull().default(''),
+    secondaryVibe: text('secondary_vibe').notNull().default(''),
     favorite: boolean('favorite').notNull().default(false),
     rating: integer('rating').notNull().default(0),
     longevity: integer('longevity').notNull().default(0),

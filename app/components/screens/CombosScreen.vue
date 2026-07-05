@@ -42,13 +42,13 @@ const filtered = computed(() => {
     if (fav.value && !c.favorite) return false;
     if (recentOnly.value && usesWithin(c, 30) === 0) return false;
     if (highHeat.value && !c.highHeat) return false;
-    if (vibe.value !== 'All' && c.vibe !== vibe.value) return false;
+    if (vibe.value !== 'All' && c.vibe !== vibe.value && c.secondaryVibe !== vibe.value) return false;
     if (rating.value !== 'any' && c.rating !== Number(rating.value)) return false;
     for (const k of layerKeys.value) {
       if (layerF.value[k] && !layerArr(c, k).includes(layerF.value[k])) return false;
     }
     if (query) {
-      const hay = [comboTitle(c, layerKeys.value), c.vibe, c.note, ...allScents(c, layerKeys.value)].join(' ').toLowerCase();
+      const hay = [comboTitle(c, layerKeys.value), c.vibe, c.secondaryVibe, c.note, ...allScents(c, layerKeys.value)].join(' ').toLowerCase();
       if (!hay.includes(query)) return false;
     }
     return true;

@@ -15,6 +15,8 @@ const title = computed(() => comboTitle(props.combo, layerKeys.value));
 const uses = computed(() => usageCounts(props.combo));
 const vibeInfo = computed(() => (props.combo.vibe ? reference.vibes.find((v) => v.name === props.combo.vibe) : null));
 const vibeColor = computed(() => vibeInfo.value?.color || 'var(--brass)');
+const secondaryVibeInfo = computed(() => (props.combo.secondaryVibe ? reference.vibes.find((v) => v.name === props.combo.secondaryVibe) : null));
+const secondaryVibeColor = computed(() => secondaryVibeInfo.value?.color || 'var(--brass)');
 
 function layerShort(k: string) {
   return reference.layers.find((l) => l.key === k)?.shortLabel ?? k;
@@ -58,7 +60,10 @@ function onSetRating(n: number) {
       </div>
     </div>
     <div style="padding: 12px 14px 14px">
-      <div v-if="combo.vibe" style="margin-bottom: 6px"><UiVibeTag :name="combo.vibe" :color="vibeColor" /></div>
+      <div v-if="combo.vibe || combo.secondaryVibe" style="margin-bottom: 6px; display: flex; gap: 6px; flex-wrap: wrap">
+        <UiVibeTag v-if="combo.vibe" :name="combo.vibe" :color="vibeColor" />
+        <UiVibeTag v-if="combo.secondaryVibe" :name="combo.secondaryVibe" :color="secondaryVibeColor" />
+      </div>
       <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 10px">
         <h3 style="margin: 0; font-family: var(--serif); font-weight: 600; font-size: 20px; line-height: 1.06; color: var(--text-hi); text-wrap: pretty">{{ title }}</h3>
         <div style="flex-shrink: 0; padding-top: 2px" @click.stop>

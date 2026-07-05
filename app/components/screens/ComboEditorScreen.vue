@@ -42,6 +42,7 @@ const historyStats = computed<[string, number][]>(() => [
 ]);
 const recentDates = computed(() => [...history(d.value)].sort((a, b) => new Date(b).getTime() - new Date(a).getTime()));
 const vibeInfo = computed(() => (d.value.vibe ? reference.vibes.find((v) => v.name === d.value.vibe) ?? null : null));
+const secondaryVibeInfo = computed(() => (d.value.secondaryVibe ? reference.vibes.find((v) => v.name === d.value.secondaryVibe) ?? null : null));
 const title = computed(() => (props.isNew ? 'New Combo' : comboTitle(d.value, layerKeys.value)));
 const ratingLabel = computed(() => ['Tap to rate', 'Redo', 'Like', 'Love'][d.value.rating]);
 
@@ -120,11 +121,11 @@ function vibeOptionColor(name: string) {
         <ScreensToggleCard icon="flame" title="High-heat safe" desc="Holds up in hot, humid weather" v-model="d.highHeat" />
       </div>
 
-      <div class="kicker" style="margin: 24px 0 10px">Vibe Category</div>
+      <div class="kicker" style="margin: 24px 0 10px">Primary Vibe</div>
       <UiDropdown
         :model-value="d.vibe"
         placeholder="Choose a vibe…"
-        :options="reference.vibes.map((v) => v.name)"
+        :options="reference.vibes.map((v) => v.name).filter((n) => n !== d.secondaryVibe)"
         :option-color="vibeOptionColor"
         @update:model-value="set('vibe', $event as string)"
       />
@@ -146,6 +147,35 @@ function vibeOptionColor(name: string) {
           <ScreensVibeInfoRow label="Atmospheric Weight" :accent="vibeInfo.color">{{ vibeInfo.weight }}</ScreensVibeInfoRow>
           <ScreensVibeInfoRow :label="`The Secret · &quot;${vibeInfo.secretWord}&quot;`" :accent="vibeInfo.color">{{ vibeInfo.secretText }}</ScreensVibeInfoRow>
           <ScreensVibeInfoRow label="Best For" :accent="vibeInfo.color">{{ vibeInfo.bestFor }}</ScreensVibeInfoRow>
+        </div>
+      </div>
+
+      <div class="kicker" style="margin: 24px 0 10px">Secondary Vibe (optional)</div>
+      <UiDropdown
+        :model-value="d.secondaryVibe"
+        placeholder="Choose a secondary vibe…"
+        :options="reference.vibes.map((v) => v.name).filter((n) => n !== d.vibe)"
+        :option-color="vibeOptionColor"
+        @update:model-value="set('secondaryVibe', $event as string)"
+      />
+      <div
+        v-if="secondaryVibeInfo"
+        :style="{
+          marginTop: '12px', padding: '15px 16px', borderRadius: '14px', background: 'var(--surface-1)',
+          boxShadow: `inset 0 0 0 1px color-mix(in srgb, ${secondaryVibeInfo.color} 30%, var(--hairline))`,
+          animation: 'ol-fade-up .24s ease',
+        }"
+      >
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 9px">
+          <span :style="{ width: '9px', height: '9px', borderRadius: '50%', background: secondaryVibeInfo.color }" />
+          <span class="kicker" style="color: var(--text-dim)">{{ d.secondaryVibe }}</span>
+        </div>
+        <h4 style="margin: 0 0 9px; font-family: var(--serif); font-weight: 600; font-size: 18px; line-height: 1.2; color: var(--text-hi)">{{ secondaryVibeInfo.name }}</h4>
+        <p style="margin: 0; font-size: 13.5px; line-height: 1.55; color: var(--text)">{{ secondaryVibeInfo.logic }}</p>
+        <div style="margin-top: 13px; display: flex; flex-direction: column; gap: 12px">
+          <ScreensVibeInfoRow label="Atmospheric Weight" :accent="secondaryVibeInfo.color">{{ secondaryVibeInfo.weight }}</ScreensVibeInfoRow>
+          <ScreensVibeInfoRow :label="`The Secret · &quot;${secondaryVibeInfo.secretWord}&quot;`" :accent="secondaryVibeInfo.color">{{ secondaryVibeInfo.secretText }}</ScreensVibeInfoRow>
+          <ScreensVibeInfoRow label="Best For" :accent="secondaryVibeInfo.color">{{ secondaryVibeInfo.bestFor }}</ScreensVibeInfoRow>
         </div>
       </div>
 

@@ -15,7 +15,7 @@ export const useCombosStore = defineStore('combos', () => {
   function fromRow(row: any): Combo {
     return {
       id: row.id, name: row.name, layers: row.layers ?? {}, season: row.season,
-      highHeat: row.high_heat, vibe: row.vibe, favorite: row.favorite, rating: row.rating,
+      highHeat: row.high_heat, vibe: row.vibe, secondaryVibe: row.secondary_vibe, favorite: row.favorite, rating: row.rating,
       longevity: row.longevity, projection: row.projection, note: row.note,
       history: row.history ?? [], photoKey: row.photo_key,
     };
@@ -24,7 +24,7 @@ export const useCombosStore = defineStore('combos', () => {
   function toRow(combo: Combo) {
     return {
       name: combo.name, layers: combo.layers, season: combo.season, high_heat: combo.highHeat,
-      vibe: combo.vibe, favorite: combo.favorite, rating: combo.rating, longevity: combo.longevity,
+      vibe: combo.vibe, secondary_vibe: combo.secondaryVibe, favorite: combo.favorite, rating: combo.rating, longevity: combo.longevity,
       projection: combo.projection, note: combo.note, history: combo.history, photo_key: combo.photoKey,
       updated_at: new Date().toISOString(),
     };

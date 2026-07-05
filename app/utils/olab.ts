@@ -11,6 +11,7 @@ export interface Combo {
   season: string;
   highHeat: boolean;
   vibe: string;
+  secondaryVibe: string;
   favorite: boolean;
   rating: number;
   longevity: number;
@@ -113,6 +114,7 @@ export function newCombo(layerKeys: string[]): Combo {
     season: 'Spring/Summer',
     highHeat: false,
     vibe: '',
+    secondaryVibe: '',
     favorite: false,
     rating: 0,
     longevity: 0,
