@@ -1,0 +1,26 @@
+{
+  "planPath": "docs/superpowers/plans/2026-07-05-combo-feedback-features.md",
+  "tasks": [
+    {
+      "id": 1,
+      "subject": "Task 1: Year-Round season + centralize seasonIcon()",
+      "status": "pending"
+    },
+    {
+      "id": 2,
+      "subject": "Task 2: Custom scents become reusable & alphabetized",
+      "status": "pending"
+    },
+    {
+      "id": 3,
+      "subject": "Task 3: Combo cards show full scent list",
+      "status": "pending"
+    },
+    {
+      "id": 4,
+      "subject": "Task 4: Primary + Secondary vibe",
+      "status": "pending"
+    }
+  ],
+  "lastUpdated": "2026-07-05"
+}
