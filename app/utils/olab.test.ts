@@ -92,4 +92,7 @@ describe('seasonIcon', () => {
   it('returns sun for Spring/Summer', () => {
     expect(seasonIcon('Spring/Summer')).toBe('sun');
   });
+  it('falls back to sun for an unrecognized value', () => {
+    expect(seasonIcon('bogus')).toBe('sun');
+  });
 });

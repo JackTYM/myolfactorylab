@@ -24,10 +24,14 @@ export const LONGEVITY_LABELS: Record<number, string> = { 0: 'Not rated', 1: 'Sh
 export const PROJECTION_LABELS: Record<number, string> = { 0: 'Not rated', 1: 'Soft', 2: 'Moderate', 3: 'Strong' };
 export const SEASONS = ['Fall/Winter', 'Spring/Summer', 'Year-Round'];
 
+const SEASON_ICONS: Record<string, string> = {
+  'Fall/Winter': 'leaf',
+  'Spring/Summer': 'sun',
+  'Year-Round': 'cycle',
+};
+
 export function seasonIcon(season: string): string {
-  if (season === 'Fall/Winter') return 'leaf';
-  if (season === 'Year-Round') return 'cycle';
-  return 'sun';
+  return SEASON_ICONS[season] ?? 'sun';
 }
 
 export function daysSince(dateStr: string | null, now = new Date().toISOString().slice(0, 10)): number | null {
