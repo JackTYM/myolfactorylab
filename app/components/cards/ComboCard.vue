@@ -77,7 +77,7 @@ function onSetRating(n: number) {
       </div>
       <div v-if="filled.length > 0" style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 11px">
         <span
-          v-for="k in filled.slice(0, 3)"
+          v-for="k in filled"
           :key="k"
           style="
             display: inline-flex; align-items: center; gap: 5px; padding: 4px 9px; border-radius: 8px;
@@ -87,7 +87,6 @@ function onSetRating(n: number) {
           <span class="mono" style="font-size: 8px; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.05em">{{ layerShort(k) }}</span>
           <span style="font-family: var(--serif); font-size: 12.5px; color: var(--text)">{{ layerArr(combo, k).join(' + ') }}</span>
         </span>
-        <span v-if="filled.length > 3" class="mono" style="align-self: center; font-size: 9px; color: var(--text-faint)">+{{ filled.length - 3 }}</span>
       </div>
     </div>
   </div>
