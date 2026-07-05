@@ -13,6 +13,7 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   'update:modelValue': [value: string | string[]];
+  'add-custom': [value: string];
 }>();
 
 const root = ref<HTMLElement | null>(null);
@@ -60,6 +61,7 @@ function addCustom() {
   if (!v) return;
   if (props.multi) {
     if (!selectedArr.value.includes(v)) emit('update:modelValue', [...selectedArr.value, v]);
+    emit('add-custom', v);
   } else {
     emit('update:modelValue', v);
     open.value = false;

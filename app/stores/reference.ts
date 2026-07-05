@@ -126,6 +126,25 @@ export const useReferenceStore = defineStore('reference', () => {
     return loadPromise;
   }
 
+  async function addScent(name: string, layerKey: string) {
+    const trimmed = name.trim();
+    if (!trimmed) return;
+    const neon = useNeon();
+    const existing = scents.value.find((s) => s.name.toLowerCase() === trimmed.toLowerCase());
+    if (existing) {
+      if (existing.layers.includes(layerKey)) return;
+      const nextLayers = [...existing.layers, layerKey];
+      const { error } = await neon.from('scents').update({ layers: nextLayers }).eq('id', existing.id);
+      if (error) throw new Error('Failed to update scent: ' + error.message);
+      existing.layers = nextLayers;
+    } else {
+      const { data, error } = await neon.from('scents').insert({ name: trimmed, layers: [layerKey] }).select().single();
+      if (error) throw new Error('Failed to add scent: ' + error.message);
+      scents.value.push(scentFromRow(data));
+    }
+    scents.value.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
   function scentsForLayer(layerKey: string): string[] {
     return scents.value.filter((s) => (s.layers || []).includes(layerKey)).map((s) => s.name);
   }
@@ -143,5 +162,5 @@ export const useReferenceStore = defineStore('reference', () => {
     loadPromise = null;
   }
 
-  return { layers, vibes, scents, wishCategories, loaded, load, scentsForLayer, layerKeys, reset };
+  return { layers, vibes, scents, wishCategories, loaded, load, scentsForLayer, layerKeys, addScent, reset };
 });
