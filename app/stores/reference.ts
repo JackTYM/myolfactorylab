@@ -126,9 +126,19 @@ export const useReferenceStore = defineStore('reference', () => {
     return loadPromise;
   }
 
+  const scentAddQueue = new Map<string, Promise<void>>();
+
   async function addScent(name: string, layerKey: string) {
     const trimmed = name.trim();
     if (!trimmed) return;
+    const key = trimmed.toLowerCase();
+    const prior = scentAddQueue.get(key) ?? Promise.resolve();
+    const next = prior.then(() => doAddScent(trimmed, layerKey));
+    scentAddQueue.set(key, next.catch(() => {}));
+    return next;
+  }
+
+  async function doAddScent(trimmed: string, layerKey: string) {
     const neon = useNeon();
     const existing = scents.value.find((s) => s.name.toLowerCase() === trimmed.toLowerCase());
     if (existing) {

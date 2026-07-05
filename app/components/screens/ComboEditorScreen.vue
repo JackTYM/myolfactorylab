@@ -108,7 +108,7 @@ function vibeOptionColor(name: string) {
               :placeholder="`Choose ${l.label.toLowerCase()}…`"
               :options="reference.scentsForLayer(l.key)"
               @update:model-value="setLayer(l.key, $event as string[])"
-              @add-custom="(v) => reference.addScent(v as string, l.key)"
+              @add-custom="(v) => reference.addScent(v as string, l.key).catch((e) => console.error(e))"
             />
           </div>
         </div>
