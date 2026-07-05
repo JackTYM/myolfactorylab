@@ -4,23 +4,23 @@
     {
       "id": 1,
       "subject": "Task 1: Year-Round season + centralize seasonIcon()",
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": 2,
       "subject": "Task 2: Custom scents become reusable & alphabetized",
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": 3,
       "subject": "Task 3: Combo cards show full scent list",
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": 4,
       "subject": "Task 4: Primary + Secondary vibe",
-      "status": "pending"
+      "status": "completed"
     }
   ],
-  "lastUpdated": "2026-07-05"
+  "lastUpdated": "2026-07-05T00:00:00Z"
 }
