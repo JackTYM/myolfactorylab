@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { usesWithin, lastUsed, daysSince, SEASONS } from '~/utils/olab';
+import { usesWithin, lastUsed, daysSince, SEASONS, seasonIcon } from '~/utils/olab';
 
 const emit = defineEmits<{ open: [id: string] }>();
 
@@ -13,10 +13,6 @@ const WINDOWS: [string, string, number][] = [
 
 const season = ref('All');
 const win = ref('m1');
-
-function seasonIcon(s: string) {
-  return s === 'Fall/Winter' ? 'leaf' : 'sun';
-}
 
 const winEntry = computed(() => WINDOWS.find((w) => w[0] === win.value) ?? WINDOWS[0]);
 const days = computed(() => winEntry.value[2]);

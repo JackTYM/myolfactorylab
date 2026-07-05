@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { comboTitle, layerArr, allScents, usesWithin, SEASONS } from '~/utils/olab';
+import { comboTitle, layerArr, allScents, usesWithin, SEASONS, seasonIcon } from '~/utils/olab';
 
 const emit = defineEmits<{ open: [id: string]; new: [] }>();
 
@@ -117,11 +117,8 @@ function clearAll() {
       </button>
       <span style="width: 1px; height: 20px; background: var(--hairline); flex-shrink: 0" />
       <FilterChip :active="season === 'All'" @click="season = 'All'">All seasons</FilterChip>
-      <FilterChip :active="season === 'Fall/Winter'" @click="season = 'Fall/Winter'">
-        <template #icon><Icon name="leaf" :size="13" /></template>Fall/Winter
-      </FilterChip>
-      <FilterChip :active="season === 'Spring/Summer'" @click="season = 'Spring/Summer'">
-        <template #icon><Icon name="sun" :size="13" /></template>Spring/Summer
+      <FilterChip v-for="s in SEASONS" :key="s" :active="season === s" @click="season = s">
+        <template #icon><Icon :name="seasonIcon(s)" :size="13" /></template>{{ s }}
       </FilterChip>
     </div>
     <div class="ol-scroll" style="flex: 1; padding: 2px 18px 18px">

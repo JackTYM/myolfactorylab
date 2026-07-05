@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { daysSince, comboTitle, usageCounts, lastUsedMono, lastUsed, newCombo } from './olab';
+import { daysSince, comboTitle, usageCounts, lastUsedMono, lastUsed, newCombo, seasonIcon } from './olab';
 import type { Combo } from './olab';
 
 function stubCombo(overrides: Partial<Combo> = {}): Combo {
@@ -79,5 +79,17 @@ describe('lastUsed', () => {
 describe('newCombo', () => {
   it('creates a combo with a null id (DB-generated, not client-generated)', () => {
     expect(newCombo(['bodyWash']).id).toBeNull();
+  });
+});
+
+describe('seasonIcon', () => {
+  it('returns leaf for Fall/Winter', () => {
+    expect(seasonIcon('Fall/Winter')).toBe('leaf');
+  });
+  it('returns cycle for Year-Round', () => {
+    expect(seasonIcon('Year-Round')).toBe('cycle');
+  });
+  it('returns sun for Spring/Summer', () => {
+    expect(seasonIcon('Spring/Summer')).toBe('sun');
   });
 });

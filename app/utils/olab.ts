@@ -22,7 +22,13 @@ export interface Combo {
 
 export const LONGEVITY_LABELS: Record<number, string> = { 0: 'Not rated', 1: 'Short', 2: 'Medium', 3: 'Long' };
 export const PROJECTION_LABELS: Record<number, string> = { 0: 'Not rated', 1: 'Soft', 2: 'Moderate', 3: 'Strong' };
-export const SEASONS = ['Fall/Winter', 'Spring/Summer'];
+export const SEASONS = ['Fall/Winter', 'Spring/Summer', 'Year-Round'];
+
+export function seasonIcon(season: string): string {
+  if (season === 'Fall/Winter') return 'leaf';
+  if (season === 'Year-Round') return 'cycle';
+  return 'sun';
+}
 
 export function daysSince(dateStr: string | null, now = new Date().toISOString().slice(0, 10)): number | null {
   if (!dateStr) return null;

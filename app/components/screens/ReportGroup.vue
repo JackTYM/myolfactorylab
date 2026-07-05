@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Combo } from '~/utils/olab';
-import { comboTitle, lastUsed, lastUsedMono } from '~/utils/olab';
+import { comboTitle, lastUsed, lastUsedMono, seasonIcon } from '~/utils/olab';
 
 defineProps<{
   title: string;
@@ -13,10 +13,6 @@ defineProps<{
 const emit = defineEmits<{ open: [id: string] }>();
 
 const reference = useReferenceStore();
-
-function seasonIcon(season: string) {
-  return season === 'Fall/Winter' ? 'leaf' : 'sun';
-}
 
 function vibeColor(c: Combo) {
   return c.vibe ? reference.vibes.find((v) => v.name === c.vibe)?.color ?? 'var(--brass)' : 'var(--brass)';

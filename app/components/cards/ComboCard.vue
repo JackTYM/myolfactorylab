@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Combo } from '~/utils/olab';
-import { comboTitle, filledLayers, layerArr, history, usageCounts, lastUsedMono } from '~/utils/olab';
+import { comboTitle, filledLayers, layerArr, history, usageCounts, lastUsedMono, seasonIcon } from '~/utils/olab';
 
 const props = defineProps<{ combo: Combo }>();
 
@@ -8,10 +8,6 @@ const emit = defineEmits<{ open: [id: string] }>();
 
 const reference = useReferenceStore();
 const combosStore = useCombosStore();
-
-function seasonIcon(season: string) {
-  return season === 'Fall/Winter' ? 'leaf' : 'sun';
-}
 
 const layerKeys = computed(() => reference.layerKeys());
 const filled = computed(() => filledLayers(props.combo, layerKeys.value));
