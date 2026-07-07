@@ -71,7 +71,7 @@ export function comboTitle(combo: Combo, layerKeys: string[]): string {
   const scents = allScents(combo, layerKeys);
   if (!scents.length) return 'Untitled Combo';
   const pt = layerArr(combo, 'perfumesToppers');
-  const lead = pt.length ? pt[0] : scents[0];
+  const lead = pt.length ? pt[0]! : scents[0]!;
   const othersCount = scents.length - 1;
   return othersCount > 0 ? `${lead} + ${othersCount} other${othersCount === 1 ? '' : 's'}` : lead;
 }
@@ -83,7 +83,7 @@ export function history(combo: Combo): string[] {
 export function lastUsed(combo: Combo): string | null {
   const h = history(combo);
   if (!h.length) return null;
-  return [...h].sort((a, b) => new Date(b).getTime() - new Date(a).getTime())[0];
+  return [...h].sort((a, b) => new Date(b).getTime() - new Date(a).getTime())[0]!;
 }
 
 export function usesWithin(combo: Combo, days: number): number {

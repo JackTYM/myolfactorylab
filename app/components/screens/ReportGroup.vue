@@ -30,7 +30,7 @@ function vibeColor(c: Combo) {
     <div v-else style="display: flex; flex-direction: column; gap: 8px">
       <div
         v-for="{ c, n } in rows"
-        :key="c.id"
+        :key="c.id ?? undefined"
         style="display: flex; align-items: center; gap: 12px; padding: 11px 13px; border-radius: 12px; background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--hairline); cursor: pointer"
         @click="emit('open', c.id!)"
       >

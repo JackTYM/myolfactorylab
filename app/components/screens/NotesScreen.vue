@@ -33,7 +33,7 @@ function onDelete(id: string) {
       <div v-else style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px">
         <div
           v-for="n in notesStore.notes"
-          :key="n.id"
+          :key="n.id ?? undefined"
           style="background: var(--surface-2); border-radius: 15px; box-shadow: inset 0 0 0 1px var(--hairline); padding: 12px 14px"
         >
           <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px">

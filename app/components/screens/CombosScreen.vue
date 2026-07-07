@@ -137,7 +137,7 @@ function clearAll() {
         <button v-if="activeCount > 0" type="button" style="margin-top: 16px; color: var(--brass-bright); font-size: 13px; font-weight: 600" @click="clearAll">Clear filters</button>
       </div>
       <div v-else style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px">
-        <CardsComboCard v-for="c in filtered" :key="c.id" :combo="c" @open="emit('open', $event)" />
+        <CardsComboCard v-for="c in filtered" :key="c.id ?? undefined" :combo="c" @open="emit('open', $event)" />
       </div>
     </div>
 
@@ -175,7 +175,7 @@ function clearAll() {
             multi
             :model-value="layerF[l.key] || []"
             :placeholder="`Any ${l.label.toLowerCase()}`"
-            :options="layerScents[l.key]"
+            :options="layerScents[l.key] || []"
             @update:model-value="setLayerFilter(l.key, $event as string[])"
           />
         </div>

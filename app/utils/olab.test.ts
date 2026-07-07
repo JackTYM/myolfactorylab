@@ -4,7 +4,7 @@ import type { Combo } from './olab';
 
 function stubCombo(overrides: Partial<Combo> = {}): Combo {
   return {
-    id: '1', name: '', layers: {}, season: [], highHeat: false, vibe: '',
+    id: '1', name: '', layers: {}, season: [], highHeat: false, vibe: '', secondaryVibe: '',
     favorite: false, rating: 0, longevity: 0, projection: 0, note: '', history: [], photoKey: null,
     ...overrides,
   };

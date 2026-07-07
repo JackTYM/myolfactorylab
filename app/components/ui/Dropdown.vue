@@ -102,7 +102,7 @@ onUnmounted(() => document.removeEventListener('mousedown', onDocClick));
       <span style="display: flex; align-items: center; gap: 8px; min-width: 0">
         <span
           v-if="!multi && selectedArr.length && optionColor"
-          :style="{ width: '8px', height: '8px', borderRadius: '50%', background: optionColor(selectedArr[0]), flexShrink: 0 }"
+          :style="{ width: '8px', height: '8px', borderRadius: '50%', background: optionColor(selectedArr[0]!), flexShrink: 0 }"
         />
         <span :style="{ color: selectedArr.length ? 'var(--text-hi)' : 'var(--text-faint)' }">{{ triggerLabel }}</span>
       </span>

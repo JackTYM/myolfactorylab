@@ -14,12 +14,12 @@ const WINDOWS: [string, string, number][] = [
 const season = ref('All');
 const win = ref('m1');
 
-const winEntry = computed(() => WINDOWS.find((w) => w[0] === win.value) ?? WINDOWS[0]);
+const winEntry = computed(() => WINDOWS.find((w) => w[0] === win.value) ?? WINDOWS[0]!);
 const days = computed(() => winEntry.value[2]);
 const winLabel = computed(() => winEntry.value[1].toLowerCase());
 
 function onSegChange(label: string) {
-  win.value = WINDOWS.find((w) => w[1] === label)?.[0] ?? WINDOWS[0][0];
+  win.value = WINDOWS.find((w) => w[1] === label)?.[0] ?? WINDOWS[0]![0];
 }
 
 const scoped = computed(() => combosStore.combos.filter((c) => season.value === 'All' || comboSeasons(c).includes(season.value)));
