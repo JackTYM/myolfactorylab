@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { usesWithin, lastUsed, daysSince, SEASONS, seasonIcon } from '~/utils/olab';
+import { usesWithin, lastUsed, daysSince, SEASONS, seasonIcon, comboSeasons } from '~/utils/olab';
 
 const emit = defineEmits<{ open: [id: string] }>();
 
@@ -22,7 +22,7 @@ function onSegChange(label: string) {
   win.value = WINDOWS.find((w) => w[1] === label)?.[0] ?? WINDOWS[0][0];
 }
 
-const scoped = computed(() => combosStore.combos.filter((c) => season.value === 'All' || c.season === season.value));
+const scoped = computed(() => combosStore.combos.filter((c) => season.value === 'All' || comboSeasons(c).includes(season.value)));
 const rows = computed(() => scoped.value.map((c) => ({ c, n: usesWithin(c, days.value) })));
 const used = computed(() => rows.value.filter((r) => r.n > 0).sort((a, b) => b.n - a.n));
 const unused = computed(() =>

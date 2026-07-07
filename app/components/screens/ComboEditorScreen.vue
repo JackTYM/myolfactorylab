@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Combo } from '~/utils/olab';
-import { comboTitle, layerArr, history, usageCounts, prettyDate, LONGEVITY_LABELS, PROJECTION_LABELS, SEASONS } from '~/utils/olab';
+import { comboTitle, layerArr, history, usageCounts, prettyDate, LONGEVITY_LABELS, PROJECTION_LABELS, SEASONS, seasonIcon } from '~/utils/olab';
 
 const props = defineProps<{ combo: Combo; isNew: boolean }>();
 
@@ -21,6 +21,18 @@ function set<K extends keyof Combo>(k: K, v: Combo[K]) {
 
 function setLayer(k: string, v: string[]) {
   d.value.layers = { ...d.value.layers, [k]: v };
+}
+
+function toggleSeason(s: string) {
+  const cur = d.value.season || [];
+  set('season', cur.includes(s) ? cur.filter((x) => x !== s) : [...cur, s]);
+}
+
+function onDeleteScent(name: string) {
+  const scent = reference.scents.find((s) => s.name === name);
+  if (!scent) return;
+  if (!window.confirm(`Delete "${name}" from your scent list forever? Combos already using it keep it.`)) return;
+  reference.removeScent(scent.id).catch((e) => console.error(e));
 }
 
 const confirmDel = ref(false);
@@ -105,18 +117,24 @@ function vibeOptionColor(name: string) {
             <UiDropdown
               multi
               allow-custom
+              deletable
               :model-value="d.layers[l.key] || []"
               :placeholder="`Choose ${l.label.toLowerCase()}…`"
               :options="reference.scentsForLayer(l.key)"
               @update:model-value="setLayer(l.key, $event as string[])"
               @add-custom="(v) => reference.addScent(v as string, l.key).catch((e) => console.error(e))"
+              @delete-option="onDeleteScent"
             />
           </div>
         </div>
       </div>
 
-      <div class="kicker" style="margin-bottom: 10px">Best Season</div>
-      <UiSeg :options="SEASONS" v-model="d.season" />
+      <div class="kicker" style="margin-bottom: 10px">Best Season(s)</div>
+      <div style="display: flex; flex-wrap: wrap; gap: 7px">
+        <FilterChip v-for="s in SEASONS" :key="s" :active="(d.season || []).includes(s)" @click="toggleSeason(s)">
+          <template #icon><Icon :name="seasonIcon(s)" :size="13" /></template>{{ s }}
+        </FilterChip>
+      </div>
       <div style="margin-top: 16px">
         <ScreensToggleCard icon="flame" title="High-heat safe" desc="Holds up in hot, humid weather" v-model="d.highHeat" />
       </div>

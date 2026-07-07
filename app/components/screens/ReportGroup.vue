@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Combo } from '~/utils/olab';
-import { comboTitle, lastUsed, lastUsedMono, seasonIcon } from '~/utils/olab';
+import { comboTitle, lastUsed, lastUsedMono, seasonIcon, comboSeasons } from '~/utils/olab';
 
 defineProps<{
   title: string;
@@ -38,7 +38,7 @@ function vibeColor(c: Combo) {
         <div style="flex: 1; min-width: 0">
           <div style="font-family: var(--serif); font-size: 16px; color: var(--text-hi); line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{ comboTitle(c, reference.layerKeys()) }}</div>
           <div style="display: flex; align-items: center; gap: 9px; margin-top: 4px">
-            <CardsMetaBadge :icon="seasonIcon(c.season)">{{ c.season }}</CardsMetaBadge>
+            <CardsMetaBadge v-for="s in comboSeasons(c)" :key="s" :icon="seasonIcon(s)">{{ s }}</CardsMetaBadge>
             <Icon v-if="c.favorite" name="heart" :size="12" fill style="color: var(--stat-neg)" />
           </div>
         </div>

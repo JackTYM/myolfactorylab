@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { comboTitle, layerArr, allScents, usesWithin, SEASONS, seasonIcon } from '~/utils/olab';
+import { comboTitle, layerArr, allScents, usesWithin, SEASONS, seasonIcon, comboSeasons } from '~/utils/olab';
 
 const emit = defineEmits<{ open: [id: string]; new: [] }>();
 
@@ -14,13 +14,13 @@ const RATING_OPTS: [string, string][] = [
 ];
 
 const q = ref('');
-const season = ref('All');
+const seasons = ref<string[]>([]);
 const fav = ref(false);
 const recentOnly = ref(false);
 const highHeat = ref(false);
-const rating = ref('any');
-const vibe = ref('All');
-const layerF = ref<Record<string, string>>({});
+const ratings = ref<string[]>([]);
+const vibes = ref<string[]>([]);
+const layerF = ref<Record<string, string[]>>({});
 const sheet = ref(false);
 
 const layerKeys = computed(() => reference.layerKeys());
@@ -38,14 +38,15 @@ const layerScents = computed(() => {
 const filtered = computed(() => {
   const query = q.value.trim().toLowerCase();
   return combosStore.combos.filter((c) => {
-    if (season.value !== 'All' && c.season !== season.value) return false;
+    if (seasons.value.length && !seasons.value.some((s) => comboSeasons(c).includes(s))) return false;
     if (fav.value && !c.favorite) return false;
     if (recentOnly.value && usesWithin(c, 30) === 0) return false;
     if (highHeat.value && !c.highHeat) return false;
-    if (vibe.value !== 'All' && c.vibe !== vibe.value && c.secondaryVibe !== vibe.value) return false;
-    if (rating.value !== 'any' && c.rating !== Number(rating.value)) return false;
+    if (vibes.value.length && !vibes.value.some((v) => v === c.vibe || v === c.secondaryVibe)) return false;
+    if (ratings.value.length && !ratings.value.includes(String(c.rating))) return false;
     for (const k of layerKeys.value) {
-      if (layerF.value[k] && !layerArr(c, k).includes(layerF.value[k])) return false;
+      const sel = layerF.value[k];
+      if (sel?.length && !sel.some((v) => layerArr(c, k).includes(v))) return false;
     }
     if (query) {
       const hay = [comboTitle(c, layerKeys.value), c.vibe, c.secondaryVibe, c.note, ...allScents(c, layerKeys.value)].join(' ').toLowerCase();
@@ -60,21 +61,27 @@ const activeCount = computed(
     (fav.value ? 1 : 0) +
     (recentOnly.value ? 1 : 0) +
     (highHeat.value ? 1 : 0) +
-    (vibe.value !== 'All' ? 1 : 0) +
-    (rating.value !== 'any' ? 1 : 0) +
-    Object.values(layerF.value).filter(Boolean).length
+    vibes.value.length +
+    ratings.value.length +
+    seasons.value.length +
+    Object.values(layerF.value).filter((a) => a?.length).length
 );
 
-function setLayerFilter(key: string, v: string) {
-  layerF.value[key] = v;
+function toggleIn(arr: string[], v: string): string[] {
+  return arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v];
+}
+
+function setLayerFilter(key: string, v: string[]) {
+  layerF.value = { ...layerF.value, [key]: v };
 }
 
 function clearAll() {
   fav.value = false;
   recentOnly.value = false;
   highHeat.value = false;
-  rating.value = 'any';
-  vibe.value = 'All';
+  ratings.value = [];
+  vibes.value = [];
+  seasons.value = [];
   layerF.value = {};
 }
 </script>
@@ -93,7 +100,7 @@ function clearAll() {
         <Icon name="search" :size="17" style="color: var(--text-faint); flex-shrink: 0" />
         <input
           v-model="q"
-          placeholder="Search scent, layer, or vibe…"
+          placeholder="Search scent, layer, vibe, or note…"
           style="flex: 1; padding: 12px 0; border: none; outline: none; background: transparent; color: var(--text-hi); font-size: 14.5px; font-family: var(--sans)"
         />
         <button v-if="q" type="button" style="color: var(--text-faint); display: flex; flex-shrink: 0" @click="q = ''">
@@ -116,8 +123,8 @@ function clearAll() {
         <Icon name="filter" :size="15" />Filters{{ activeCount ? ` · ${activeCount}` : '' }}
       </button>
       <span style="width: 1px; height: 20px; background: var(--hairline); flex-shrink: 0" />
-      <FilterChip :active="season === 'All'" @click="season = 'All'">All seasons</FilterChip>
-      <FilterChip v-for="s in SEASONS" :key="s" :active="season === s" @click="season = s">
+      <FilterChip :active="seasons.length === 0" @click="seasons = []">All seasons</FilterChip>
+      <FilterChip v-for="s in SEASONS" :key="s" :active="seasons.includes(s)" @click="seasons = toggleIn(seasons, s)">
         <template #icon><Icon :name="seasonIcon(s)" :size="13" /></template>{{ s }}
       </FilterChip>
     </div>
@@ -143,18 +150,20 @@ function clearAll() {
 
       <div class="kicker" style="margin-bottom: 9px">Rating</div>
       <div style="display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 16px">
-        <FilterChip v-for="[v, l] in RATING_OPTS" :key="v" :active="rating === v" @click="rating = v">{{ l }}</FilterChip>
+        <FilterChip :active="ratings.length === 0" @click="ratings = []">Any</FilterChip>
+        <FilterChip v-for="[v, l] in RATING_OPTS.filter(([v]) => v !== 'any')" :key="v" :active="ratings.includes(v)" @click="ratings = toggleIn(ratings, v)">{{ l }}</FilterChip>
       </div>
 
       <div class="kicker" style="margin-bottom: 9px">Season</div>
       <div style="display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 16px">
-        <FilterChip v-for="s in ['All', ...SEASONS]" :key="s" :active="season === s" @click="season = s">{{ s }}</FilterChip>
+        <FilterChip :active="seasons.length === 0" @click="seasons = []">All</FilterChip>
+        <FilterChip v-for="s in SEASONS" :key="s" :active="seasons.includes(s)" @click="seasons = toggleIn(seasons, s)">{{ s }}</FilterChip>
       </div>
 
       <div class="kicker" style="margin-bottom: 9px">Vibe category</div>
       <div style="display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 18px">
-        <FilterChip :active="vibe === 'All'" @click="vibe = 'All'">All</FilterChip>
-        <FilterChip v-for="v in reference.vibes" :key="v.name" :color="v.color" :active="vibe === v.name" @click="vibe = v.name">{{ v.name }}</FilterChip>
+        <FilterChip :active="vibes.length === 0" @click="vibes = []">All</FilterChip>
+        <FilterChip v-for="v in reference.vibes" :key="v.name" :color="v.color" :active="vibes.includes(v.name)" @click="vibes = toggleIn(vibes, v.name)">{{ v.name }}</FilterChip>
       </div>
 
       <div class="kicker" style="margin-bottom: 9px">By layer scent</div>
@@ -163,10 +172,11 @@ function clearAll() {
         <div v-for="l in reference.layers.filter((l) => layerScents[l.key]?.length)" :key="l.key">
           <div class="kicker" style="margin-bottom: 7px">{{ l.label }}</div>
           <UiDropdown
-            :model-value="layerF[l.key] || ''"
+            multi
+            :model-value="layerF[l.key] || []"
             :placeholder="`Any ${l.label.toLowerCase()}`"
             :options="layerScents[l.key]"
-            @update:model-value="setLayerFilter(l.key, $event as string)"
+            @update:model-value="setLayerFilter(l.key, $event as string[])"
           />
         </div>
       </div>

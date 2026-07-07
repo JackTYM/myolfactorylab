@@ -12,7 +12,7 @@ export const combos = pgTable(
     userId: ownerId(),
     name: text('name').notNull().default(''),
     layers: jsonb('layers').notNull().default({}),
-    season: text('season').notNull().default('Spring/Summer'),
+    season: jsonb('season').notNull().default([]),
     highHeat: boolean('high_heat').notNull().default(false),
     vibe: text('vibe').notNull().default(''),
     secondaryVibe: text('secondary_vibe').notNull().default(''),

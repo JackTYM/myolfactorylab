@@ -4,7 +4,7 @@ import type { Combo } from './olab';
 
 function stubCombo(overrides: Partial<Combo> = {}): Combo {
   return {
-    id: '1', name: '', layers: {}, season: 'Spring/Summer', highHeat: false, vibe: '',
+    id: '1', name: '', layers: {}, season: [], highHeat: false, vibe: '',
     favorite: false, rating: 0, longevity: 0, projection: 0, note: '', history: [], photoKey: null,
     ...overrides,
   };
@@ -83,14 +83,20 @@ describe('newCombo', () => {
 });
 
 describe('seasonIcon', () => {
-  it('returns leaf for Fall/Winter', () => {
-    expect(seasonIcon('Fall/Winter')).toBe('leaf');
+  it('returns droplet for Spring', () => {
+    expect(seasonIcon('Spring')).toBe('droplet');
+  });
+  it('returns sun for Summer', () => {
+    expect(seasonIcon('Summer')).toBe('sun');
+  });
+  it('returns leaf for Fall', () => {
+    expect(seasonIcon('Fall')).toBe('leaf');
+  });
+  it('returns waves for Winter', () => {
+    expect(seasonIcon('Winter')).toBe('waves');
   });
   it('returns cycle for Year-Round', () => {
     expect(seasonIcon('Year-Round')).toBe('cycle');
-  });
-  it('returns sun for Spring/Summer', () => {
-    expect(seasonIcon('Spring/Summer')).toBe('sun');
   });
   it('falls back to sun for an unrecognized value', () => {
     expect(seasonIcon('bogus')).toBe('sun');

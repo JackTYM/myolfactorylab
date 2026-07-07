@@ -5,15 +5,17 @@ const props = withDefaults(
     options: string[];
     multi?: boolean;
     allowCustom?: boolean;
+    deletable?: boolean;
     placeholder?: string;
     optionColor?: (opt: string) => string;
   }>(),
-  { multi: false, allowCustom: false, placeholder: 'Select…' }
+  { multi: false, allowCustom: false, deletable: false, placeholder: 'Select…' }
 );
 
 const emit = defineEmits<{
   'update:modelValue': [value: string | string[]];
   'add-custom': [value: string];
+  'delete-option': [value: string];
 }>();
 
 const root = ref<HTMLElement | null>(null);
@@ -181,7 +183,17 @@ onUnmounted(() => document.removeEventListener('mousedown', onDocClick));
           />
           <span>{{ opt }}</span>
         </span>
-        <Icon v-if="isSelected(opt)" name="check" :size="14" :stroke="2.2" style="color: var(--brass)" />
+        <span style="display: flex; align-items: center; gap: 8px; flex-shrink: 0">
+          <Icon v-if="isSelected(opt)" name="check" :size="14" :stroke="2.2" style="color: var(--brass)" />
+          <span
+            v-if="deletable"
+            role="button"
+            style="display: flex; color: var(--text-faint); padding: 2px"
+            @click.stop="emit('delete-option', opt)"
+          >
+            <Icon name="trash" :size="14" />
+          </span>
+        </span>
       </button>
 
       <div v-if="!options.length" style="padding: 10px; font-size: 13px; color: var(--text-faint)">No options</div>

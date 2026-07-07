@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Combo } from '~/utils/olab';
-import { comboTitle, filledLayers, layerArr, history, usageCounts, lastUsedMono, seasonIcon } from '~/utils/olab';
+import { comboTitle, filledLayers, layerArr, history, usageCounts, lastUsedMono, seasonIcon, comboSeasons } from '~/utils/olab';
 
 const props = defineProps<{ combo: Combo }>();
 
@@ -71,7 +71,7 @@ function onSetRating(n: number) {
         </div>
       </div>
       <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 10px">
-        <CardsMetaBadge :icon="seasonIcon(combo.season)" color="var(--text-dim)">{{ combo.season }}</CardsMetaBadge>
+        <CardsMetaBadge v-for="s in comboSeasons(combo)" :key="s" :icon="seasonIcon(s)" color="var(--text-dim)">{{ s }}</CardsMetaBadge>
         <CardsMetaBadge v-if="combo.highHeat" icon="flame" color="var(--stat-mod)">Heat Safe</CardsMetaBadge>
         <CardsMetaBadge v-if="uses.m1 > 0" icon="calendar" color="var(--stat-fresh)">{{ uses.m1 }}× last mo</CardsMetaBadge>
         <CardsMetaBadge>{{ filled.length }} / {{ layerKeys.length }} layers</CardsMetaBadge>

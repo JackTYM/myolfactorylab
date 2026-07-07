@@ -14,7 +14,8 @@ export const useCombosStore = defineStore('combos', () => {
 
   function fromRow(row: any): Combo {
     return {
-      id: row.id, name: row.name, layers: row.layers ?? {}, season: row.season,
+      id: row.id, name: row.name, layers: row.layers ?? {},
+      season: Array.isArray(row.season) ? row.season : row.season ? [row.season] : [],
       highHeat: row.high_heat, vibe: row.vibe, secondaryVibe: row.secondary_vibe, favorite: row.favorite, rating: row.rating,
       longevity: row.longevity, projection: row.projection, note: row.note,
       history: row.history ?? [], photoKey: row.photo_key,

@@ -155,6 +155,13 @@ export const useReferenceStore = defineStore('reference', () => {
     scents.value.sort((a, b) => a.name.localeCompare(b.name));
   }
 
+  async function removeScent(id: string) {
+    const neon = useNeon();
+    const { error } = await neon.from('scents').delete().eq('id', id);
+    if (error) throw new Error('Failed to delete scent: ' + error.message);
+    scents.value = scents.value.filter((s) => s.id !== id);
+  }
+
   function scentsForLayer(layerKey: string): string[] {
     return scents.value.filter((s) => (s.layers || []).includes(layerKey)).map((s) => s.name);
   }
@@ -172,5 +179,5 @@ export const useReferenceStore = defineStore('reference', () => {
     loadPromise = null;
   }
 
-  return { layers, vibes, scents, wishCategories, loaded, load, scentsForLayer, layerKeys, addScent, reset };
+  return { layers, vibes, scents, wishCategories, loaded, load, scentsForLayer, layerKeys, addScent, removeScent, reset };
 });

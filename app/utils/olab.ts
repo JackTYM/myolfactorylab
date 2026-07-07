@@ -8,7 +8,7 @@ export interface Combo {
   id: string | null;
   name: string;
   layers: Record<string, string[]>;
-  season: string;
+  season: string[];
   highHeat: boolean;
   vibe: string;
   secondaryVibe: string;
@@ -23,11 +23,13 @@ export interface Combo {
 
 export const LONGEVITY_LABELS: Record<number, string> = { 0: 'Not rated', 1: 'Short', 2: 'Medium', 3: 'Long' };
 export const PROJECTION_LABELS: Record<number, string> = { 0: 'Not rated', 1: 'Soft', 2: 'Moderate', 3: 'Strong' };
-export const SEASONS = ['Fall/Winter', 'Spring/Summer', 'Year-Round'];
+export const SEASONS = ['Spring', 'Summer', 'Fall', 'Winter', 'Year-Round'];
 
 const SEASON_ICONS: Record<string, string> = {
-  'Fall/Winter': 'leaf',
-  'Spring/Summer': 'sun',
+  Spring: 'droplet',
+  Summer: 'sun',
+  Fall: 'leaf',
+  Winter: 'waves',
   'Year-Round': 'cycle',
 };
 
@@ -50,6 +52,10 @@ export function prettyDate(dateStr: string | null): string {
 export function layerArr(combo: Combo, k: string): string[] {
   const v = combo.layers && combo.layers[k];
   return Array.isArray(v) ? v : v ? [v] : [];
+}
+
+export function comboSeasons(combo: Combo): string[] {
+  return Array.isArray(combo.season) ? combo.season : combo.season ? [combo.season as unknown as string] : [];
 }
 
 export function filledLayers(combo: Combo, layerKeys: string[]): string[] {
@@ -111,7 +117,7 @@ export function newCombo(layerKeys: string[]): Combo {
     id: null,
     name: '',
     layers: Object.fromEntries(layerKeys.map((k) => [k, []])),
-    season: 'Spring/Summer',
+    season: [],
     highHeat: false,
     vibe: '',
     secondaryVibe: '',
