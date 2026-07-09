@@ -29,6 +29,19 @@ function onToggleFav() {
 function onSetRating(n: number) {
   combosStore.setRating(props.combo.id!, n);
 }
+
+function onLogUse() {
+  combosStore.logUse(props.combo.id!);
+}
+
+const noteBtnRef = ref<HTMLButtonElement | null>(null);
+const showNote = ref(false);
+const noteAnchor = ref<DOMRect | null>(null);
+
+function onShowNote() {
+  noteAnchor.value = noteBtnRef.value?.getBoundingClientRect() ?? null;
+  showNote.value = true;
+}
 </script>
 
 <template>
@@ -44,8 +57,19 @@ function onSetRating(n: number) {
       <UiDropPhoto :photo-key="combo.photoKey" :combo-id="combo.id!" @click.stop />
       <span v-if="combo.vibe" :style="{ position: 'absolute', left: '0', top: '0', bottom: '0', width: '4px', background: vibeColor }" />
       <div style="position: absolute; top: 8px; right: 8px">
-        <span style="display: flex; border-radius: 999px; background: rgba(10,8,7,0.55); backdrop-filter: blur(6px)">
+        <span style="display: flex; align-items: center; border-radius: 999px; background: rgba(10,8,7,0.55); backdrop-filter: blur(6px)">
           <UiHeartButton :active="combo.favorite" :size="18" @toggle="onToggleFav" />
+          <button
+            type="button"
+            aria-label="Log a use"
+            style="
+              display: inline-flex; align-items: center; justify-content: center;
+              width: 34px; height: 34px; border-radius: 999px; background: transparent; color: var(--text);
+            "
+            @click.stop="onLogUse"
+          >
+            <Icon name="drop_log" :size="16" />
+          </button>
         </span>
       </div>
       <div
@@ -58,6 +82,20 @@ function onSetRating(n: number) {
         <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--stat-fresh)" />
         <span class="mono" style="font-size: 8.5px; letter-spacing: 0.08em; color: var(--stat-fresh); text-transform: uppercase">{{ lastUsedMono(combo) }}</span>
       </div>
+      <button
+        v-if="combo.note"
+        ref="noteBtnRef"
+        type="button"
+        aria-label="Show note"
+        style="
+          position: absolute; bottom: 8px; right: 8px; display: inline-flex; align-items: center; justify-content: center;
+          width: 32px; height: 32px; border-radius: 999px; background: rgba(10,8,7,0.6); backdrop-filter: blur(6px); color: var(--text);
+        "
+        @click.stop="onShowNote"
+      >
+        <Icon name="note" :size="16" />
+      </button>
+      <CardsNotePopover v-if="showNote && noteAnchor" :note="combo.note" :anchor-rect="noteAnchor" @close="showNote = false" />
     </div>
     <div style="padding: 12px 14px 14px">
       <div v-if="combo.vibe || combo.secondaryVibe" style="margin-bottom: 6px; display: flex; gap: 6px; flex-wrap: wrap">
