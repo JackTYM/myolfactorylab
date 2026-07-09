@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const props = defineProps<{ photoKey: string | null; comboId: string }>();
+const props = defineProps<{ photoKey: string | null; comboId: string; readonly?: boolean }>();
 
 const emit = defineEmits<{ 'update:photoKey': [key: string] }>();
 
@@ -73,13 +73,13 @@ function onCropCancel() {
       overflow: 'hidden',
       background: 'var(--surface-2)',
       border: isDragging ? '1px dashed var(--brass)' : '1px solid var(--hairline)',
-      cursor: uploading ? 'default' : 'pointer',
+      cursor: props.readonly ? 'inherit' : (uploading ? 'default' : 'pointer'),
       transition: 'border-color 0.15s ease',
     }"
-    @click="!uploading && !cropFile && openPicker()"
-    @dragover.prevent="isDragging = true"
-    @dragleave.prevent="isDragging = false"
-    @drop.prevent="onDrop"
+    @click="!props.readonly && !uploading && !cropFile && openPicker()"
+    @dragover.prevent="!props.readonly && (isDragging = true)"
+    @dragleave.prevent="!props.readonly && (isDragging = false)"
+    @drop.prevent="!props.readonly && onDrop($event)"
   >
     <input ref="fileInput" type="file" accept="image/*" style="display: none" @change="onFileChange" />
 
@@ -108,7 +108,7 @@ function onCropCancel() {
     </div>
 
     <div
-      v-if="src"
+      v-if="src && !props.readonly"
       class="photo-overlay"
       style="
         position: absolute;

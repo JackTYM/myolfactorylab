@@ -54,7 +54,7 @@ function onShowNote() {
     @click="emit('open', combo.id!)"
   >
     <div style="position: relative">
-      <UiDropPhoto :photo-key="combo.photoKey" :combo-id="combo.id!" @click.stop />
+      <UiDropPhoto :photo-key="combo.photoKey" :combo-id="combo.id!" readonly />
       <span v-if="combo.vibe" :style="{ position: 'absolute', left: '0', top: '0', bottom: '0', width: '4px', background: vibeColor }" />
       <div style="position: absolute; top: 8px; right: 8px">
         <span style="display: flex; align-items: center; border-radius: 999px; background: rgba(10,8,7,0.55); backdrop-filter: blur(6px)">

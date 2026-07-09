@@ -89,20 +89,22 @@ const navHidden = computed(() => !!editor.value);
     <UiPrimaryButton @click="bootstrapData">Try again</UiPrimaryButton>
   </div>
   <div v-else class="app-shell">
-    <div style="flex: 1; min-height: 0; display: flex; flex-direction: column">
-      <ScreensComboEditorScreen
-        v-if="editor"
-        :key="editor.combo.id ?? 'new'"
-        :combo="editor.combo"
-        :is-new="editor.isNew"
-        @back="closeEditor"
-        @save="saveCombo"
-        @delete="deleteCombo"
-      />
-      <ScreensCombosScreen v-else-if="tab === 'combos'" @open="openCombo" @new="openNew" />
+    <div style="flex: 1; min-height: 0; display: flex; flex-direction: column; position: relative">
+      <ScreensCombosScreen v-if="tab === 'combos'" @open="openCombo" @new="openNew" />
       <ScreensWishListScreen v-else-if="tab === 'wish'" />
       <ScreensReportScreen v-else-if="tab === 'report'" @open="openCombo" />
       <ScreensNotesScreen v-else-if="tab === 'notes'" />
+
+      <div v-if="editor" class="editor-overlay">
+        <ScreensComboEditorScreen
+          :key="editor.combo.id ?? 'new'"
+          :combo="editor.combo"
+          :is-new="editor.isNew"
+          @back="closeEditor"
+          @save="saveCombo"
+          @delete="deleteCombo"
+        />
+      </div>
     </div>
     <TabBar v-if="!navHidden" :active="tab" @change="(t) => (tab = t)" @new="openNew" />
     <Toast :message="toast" :nav-hidden="navHidden" />
@@ -125,5 +127,14 @@ const navHidden = computed(() => !!editor.value);
     max-width: 1080px;
     box-shadow: 0 0 0 1px var(--hairline);
   }
+}
+
+.editor-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(120% 80% at 50% -10%, #181310 0%, var(--ink-950) 55%, #060504 100%);
 }
 </style>
