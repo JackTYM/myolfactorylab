@@ -5,16 +5,18 @@ defineEmits<{ close: [] }>();
 const MAX_WIDTH = 220;
 const GAP = 8;
 const MARGIN = 8;
+const MIN_SPACE_ABOVE = 120;
 
 const bubbleStyle = computed(() => {
-  const left = Math.max(MARGIN, props.anchorRect.right - MAX_WIDTH);
-  const top = props.anchorRect.top - GAP;
+  const left = Math.max(MARGIN, Math.min(props.anchorRect.right - MAX_WIDTH, window.innerWidth - MAX_WIDTH - MARGIN));
+  const openUpward = props.anchorRect.top >= MIN_SPACE_ABOVE;
   return {
     position: 'fixed' as const,
     left: `${left}px`,
-    top: `${top}px`,
-    transform: 'translateY(-100%)',
     maxWidth: `${MAX_WIDTH}px`,
+    ...(openUpward
+      ? { top: `${props.anchorRect.top - GAP}px`, transform: 'translateY(-100%)' }
+      : { top: `${props.anchorRect.bottom + GAP}px` }),
   };
 });
 </script>
