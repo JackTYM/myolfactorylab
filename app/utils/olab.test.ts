@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { daysSince, comboTitle, usageCounts, lastUsedMono, lastUsed, newCombo, seasonIcon } from './olab';
+import { daysSince, comboTitle, usageCounts, lastUsedMono, lastUsed, newCombo, seasonIcon, withLoggedUse } from './olab';
 import type { Combo } from './olab';
 
 function stubCombo(overrides: Partial<Combo> = {}): Combo {
@@ -100,5 +100,17 @@ describe('seasonIcon', () => {
   });
   it('falls back to sun for an unrecognized value', () => {
     expect(seasonIcon('bogus')).toBe('sun');
+  });
+});
+
+describe('withLoggedUse', () => {
+  it('adds today to an empty history', () => {
+    expect(withLoggedUse([], '2026-07-08')).toEqual(['2026-07-08']);
+  });
+  it('prepends today ahead of older entries', () => {
+    expect(withLoggedUse(['2026-07-01'], '2026-07-08')).toEqual(['2026-07-08', '2026-07-01']);
+  });
+  it('does not duplicate an existing entry for today', () => {
+    expect(withLoggedUse(['2026-07-01', '2026-07-08'], '2026-07-08')).toEqual(['2026-07-08', '2026-07-01']);
   });
 });

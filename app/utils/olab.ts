@@ -80,6 +80,10 @@ export function history(combo: Combo): string[] {
   return Array.isArray(combo.history) ? combo.history : [];
 }
 
+export function withLoggedUse(history: string[], today: string): string[] {
+  return [today, ...history.filter((d) => d !== today)];
+}
+
 export function lastUsed(combo: Combo): string | null {
   const h = history(combo);
   if (!h.length) return null;
