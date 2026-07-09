@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import type { Combo } from '~/utils/olab';
+import { withLoggedUse } from '~/utils/olab';
 
 export const useCombosStore = defineStore('combos', () => {
   const combos = ref<Combo[]>([]);
@@ -63,5 +64,12 @@ export const useCombosStore = defineStore('combos', () => {
     await save({ ...combo, rating });
   }
 
-  return { combos, loaded, load, save, remove, toggleFavorite, setRating };
+  async function logUse(id: string) {
+    const combo = combos.value.find((c) => c.id === id);
+    if (!combo) return;
+    const today = new Date().toISOString().slice(0, 10);
+    await save({ ...combo, history: withLoggedUse(combo.history, today) });
+  }
+
+  return { combos, loaded, load, save, remove, toggleFavorite, setRating, logUse };
 });
