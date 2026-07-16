@@ -42,7 +42,7 @@ const SEASON_COLORS: Record<string, string> = {
   Summer: 'var(--fam-citrus)',
   Fall: 'var(--fam-woody)',
   Winter: 'var(--fam-aromatic)',
-  'Year-Round': 'var(--brass)',
+  'Year-Round': 'var(--fam-floral)',
 };
 
 export function seasonColor(season: string): string {
