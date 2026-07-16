@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Combo } from '~/utils/olab';
-import { comboTitle, filledLayers, layerArr, history, usageCounts, lastUsedMono, seasonIcon, comboSeasons } from '~/utils/olab';
+import { comboTitle, filledLayers, layerArr, history, usageCounts, lastUsedMono, lastUsed, daysSince, seasonIcon, seasonColor, comboSeasons } from '~/utils/olab';
 
 const props = defineProps<{ combo: Combo }>();
 
@@ -17,6 +17,7 @@ const vibeInfo = computed(() => (props.combo.vibe ? reference.vibes.find((v) => 
 const vibeColor = computed(() => vibeInfo.value?.color || 'var(--brass)');
 const secondaryVibeInfo = computed(() => (props.combo.secondaryVibe ? reference.vibes.find((v) => v.name === props.combo.secondaryVibe) : null));
 const secondaryVibeColor = computed(() => secondaryVibeInfo.value?.color || 'var(--brass)');
+const usedToday = computed(() => daysSince(lastUsed(props.combo)) === 0);
 
 function layerShort(k: string) {
   return reference.layers.find((l) => l.key === k)?.shortLabel ?? k;
@@ -62,10 +63,11 @@ function onShowNote() {
           <button
             type="button"
             aria-label="Log a use"
-            style="
-              display: inline-flex; align-items: center; justify-content: center;
-              width: 34px; height: 34px; border-radius: 999px; background: transparent; color: var(--text);
-            "
+            :style="{
+              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+              width: '34px', height: '34px', borderRadius: '999px', background: 'transparent',
+              color: usedToday ? 'var(--stat-fresh)' : 'var(--text)',
+            }"
             @click.stop="onLogUse"
           >
             <Icon name="drop_log" :size="16" />
@@ -73,7 +75,7 @@ function onShowNote() {
         </span>
       </div>
       <div
-        v-if="history(combo).length > 0"
+        v-if="history(combo).length > 0 && !usedToday"
         style="
           position: absolute; bottom: 8px; left: 10px; display: inline-flex; align-items: center; gap: 6px;
           padding: 5px 9px; border-radius: 999px; background: rgba(10,8,7,0.6); backdrop-filter: blur(6px);
@@ -109,8 +111,8 @@ function onShowNote() {
         </div>
       </div>
       <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 10px">
-        <CardsMetaBadge v-for="s in comboSeasons(combo)" :key="s" :icon="seasonIcon(s)" color="var(--text-dim)">{{ s }}</CardsMetaBadge>
-        <CardsMetaBadge v-if="combo.highHeat" icon="flame" color="var(--stat-mod)">Heat Safe</CardsMetaBadge>
+        <CardsMetaBadge v-for="s in comboSeasons(combo)" :key="s" :icon="seasonIcon(s)" :color="seasonColor(s)">{{ s }}</CardsMetaBadge>
+        <CardsMetaBadge v-if="combo.highHeat" icon="flame" color="var(--stat-heat)">Heat Safe</CardsMetaBadge>
         <CardsMetaBadge v-if="uses.m1 > 0" icon="calendar" color="var(--stat-fresh)">{{ uses.m1 }}× last mo</CardsMetaBadge>
         <CardsMetaBadge>{{ filled.length }} / {{ layerKeys.length }} layers</CardsMetaBadge>
       </div>

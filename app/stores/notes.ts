@@ -10,6 +10,8 @@ export interface Note {
 export const useNotesStore = defineStore('notes', () => {
   const notes = ref<Note[]>([]);
   const loaded = ref(false);
+  const pendingPatches: Record<string, Partial<Pick<Note, 'title' | 'body'>>> = {};
+  const pendingSaves: Record<string, ReturnType<typeof setTimeout>> = {};
 
   function fromRow(row: any): Note {
     return { id: row.id, title: row.title, body: row.body, updatedOn: row.updated_on };
@@ -30,16 +32,18 @@ export const useNotesStore = defineStore('notes', () => {
     return note;
   }
 
-  async function update(id: string, patch: Partial<Pick<Note, 'title' | 'body'>>) {
-    const neon = useNeon();
-    const { data } = await neon
-      .from('notes')
-      .update({ ...patch, updated_on: new Date().toISOString() })
-      .eq('id', id)
-      .select()
-      .single();
-    const note = fromRow(data);
-    notes.value = notes.value.map((n) => (n.id === note.id ? note : n));
+  function update(id: string, patch: Partial<Pick<Note, 'title' | 'body'>>) {
+    const updatedOn = new Date().toISOString();
+    notes.value = notes.value.map((n) => (n.id === id ? { ...n, ...patch, updatedOn } : n));
+
+    pendingPatches[id] = { ...pendingPatches[id], ...patch };
+    clearTimeout(pendingSaves[id]);
+    pendingSaves[id] = setTimeout(async () => {
+      const toSave = pendingPatches[id];
+      delete pendingPatches[id];
+      const neon = useNeon();
+      await neon.from('notes').update({ ...toSave, updated_on: updatedOn }).eq('id', id);
+    }, 400);
   }
 
   async function remove(id: string) {

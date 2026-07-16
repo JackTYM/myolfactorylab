@@ -37,6 +37,18 @@ export function seasonIcon(season: string): string {
   return SEASON_ICONS[season] ?? 'sun';
 }
 
+const SEASON_COLORS: Record<string, string> = {
+  Spring: 'var(--fam-green)',
+  Summer: 'var(--fam-citrus)',
+  Fall: 'var(--fam-woody)',
+  Winter: 'var(--fam-aromatic)',
+  'Year-Round': 'var(--brass)',
+};
+
+export function seasonColor(season: string): string {
+  return SEASON_COLORS[season] ?? 'var(--text-dim)';
+}
+
 export function daysSince(dateStr: string | null, now = new Date().toISOString().slice(0, 10)): number | null {
   if (!dateStr) return null;
   const a = new Date(dateStr + 'T00:00:00');
