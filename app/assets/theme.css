@@ -38,6 +38,9 @@
   --stat-none: #8a8174;
   --stat-heat: #ec5b54;
 
+  /* season badges */
+  --season-spring: #1f7a52;
+
   --serif: 'Playfair Display', Georgia, serif;
   --sans: 'Hanken Grotesk', system-ui, sans-serif;
   --mono: 'IBM Plex Mono', ui-monospace, monospace;

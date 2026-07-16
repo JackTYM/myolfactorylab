@@ -38,7 +38,7 @@ export function seasonIcon(season: string): string {
 }
 
 const SEASON_COLORS: Record<string, string> = {
-  Spring: 'var(--fam-green)',
+  Spring: 'var(--season-spring)',
   Summer: 'var(--fam-citrus)',
   Fall: 'var(--fam-woody)',
   Winter: 'var(--fam-aromatic)',
