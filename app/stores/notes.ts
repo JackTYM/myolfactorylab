@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { readCache, writeCache } from '~/utils/cache';
 
 export interface Note {
   id: string | null;
@@ -8,10 +9,13 @@ export interface Note {
 }
 
 export const useNotesStore = defineStore('notes', () => {
-  const notes = ref<Note[]>([]);
-  const loaded = ref(false);
+  const cached = readCache<Note[]>('notes');
+  const notes = ref<Note[]>(cached ?? []);
+  const loaded = ref(cached !== null);
   const pendingPatches: Record<string, Partial<Pick<Note, 'title' | 'body'>>> = {};
   const pendingSaves: Record<string, ReturnType<typeof setTimeout>> = {};
+
+  watch(notes, (v) => writeCache('notes', v), { deep: true });
 
   function fromRow(row: any): Note {
     return { id: row.id, title: row.title, body: row.body, updatedOn: row.updated_on };

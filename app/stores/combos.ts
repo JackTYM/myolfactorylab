@@ -1,10 +1,14 @@
 import { defineStore } from 'pinia';
 import type { Combo } from '~/utils/olab';
 import { withLoggedUse } from '~/utils/olab';
+import { readCache, writeCache } from '~/utils/cache';
 
 export const useCombosStore = defineStore('combos', () => {
-  const combos = ref<Combo[]>([]);
-  const loaded = ref(false);
+  const cached = readCache<Combo[]>('combos');
+  const combos = ref<Combo[]>(cached ?? []);
+  const loaded = ref(cached !== null);
+
+  watch(combos, (v) => writeCache('combos', v), { deep: true });
 
   async function load() {
     const neon = useNeon();

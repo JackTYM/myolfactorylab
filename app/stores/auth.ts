@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { clearCache } from '~/utils/cache';
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref<{ id: string; email: string; name?: string } | null>(null);
@@ -39,6 +40,8 @@ export const useAuthStore = defineStore('auth', () => {
     const neon = useNeon();
     await neon.auth.signOut();
     user.value = null;
+    clearCache('combos');
+    clearCache('notes');
   }
 
   return { user, ready, init, signInEmail, signUpEmail, signInGoogle, signOut };
