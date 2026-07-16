@@ -1,5 +1,5 @@
 <script setup lang="ts">
-defineProps<{ icon: string; title: string; desc: string; modelValue: boolean }>();
+withDefaults(defineProps<{ icon: string; title: string; desc: string; modelValue: boolean; color?: string }>(), { color: 'var(--brass)' });
 
 defineEmits<{ 'update:modelValue': [value: boolean] }>();
 </script>
@@ -9,8 +9,8 @@ defineEmits<{ 'update:modelValue': [value: boolean] }>();
     <span
       :style="{
         width: '34px', height: '34px', borderRadius: '9px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
-        background: modelValue ? 'rgba(198,161,91,0.12)' : 'rgba(247,239,222,0.04)',
-        color: modelValue ? 'var(--brass)' : 'var(--text-faint)',
+        background: modelValue ? `color-mix(in srgb, ${color} 12%, transparent)` : 'rgba(247,239,222,0.04)',
+        color: modelValue ? color : 'var(--text-faint)',
       }"
     >
       <Icon :name="icon" :size="18" />

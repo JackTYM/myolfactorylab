@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Combo } from '~/utils/olab';
-import { comboTitle, layerArr, history, usageCounts, prettyDate, LONGEVITY_LABELS, PROJECTION_LABELS, SEASONS, seasonIcon } from '~/utils/olab';
+import { comboTitle, layerArr, history, usageCounts, prettyDate, LONGEVITY_LABELS, PROJECTION_LABELS, SEASONS, seasonIcon, seasonColor } from '~/utils/olab';
 
 const props = defineProps<{ combo: Combo; isNew: boolean }>();
 
@@ -131,12 +131,12 @@ function vibeOptionColor(name: string) {
 
       <div class="kicker" style="margin-bottom: 10px">Best Season(s)</div>
       <div style="display: flex; flex-wrap: wrap; gap: 7px">
-        <FilterChip v-for="s in SEASONS" :key="s" :active="(d.season || []).includes(s)" @click="toggleSeason(s)">
+        <FilterChip v-for="s in SEASONS" :key="s" :active="(d.season || []).includes(s)" :color="seasonColor(s)" @click="toggleSeason(s)">
           <template #icon><Icon :name="seasonIcon(s)" :size="13" /></template>{{ s }}
         </FilterChip>
       </div>
       <div style="margin-top: 16px">
-        <ScreensToggleCard icon="flame" title="High-heat safe" desc="Holds up in hot, humid weather" v-model="d.highHeat" />
+        <ScreensToggleCard icon="flame" title="High-heat safe" desc="Holds up in hot, humid weather" color="var(--stat-heat)" v-model="d.highHeat" />
       </div>
 
       <div class="kicker" style="margin: 24px 0 10px">Primary Vibe</div>
